@@ -24,10 +24,10 @@ public class Task11_Matrix : ITask
     /// <summary>Выполняет задание.</summary>
     public void Run()
     {
-        int size = ConsoleHelper.ReadInt("Размер N (от 2 до 20): ");
-        if (size < 2 || size > 20)
+        int size = ConsoleHelper.ReadInt("Размер N (от 2): ");
+        if (size < 2)
         {
-            Console.WriteLine("Размер должен быть от 2 до 20.");
+            Console.WriteLine("Размер должен быть не меньше 2.");
             return;
         }
         int[,] matrix = new int[size, size];
