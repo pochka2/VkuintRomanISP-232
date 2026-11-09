@@ -16,6 +16,8 @@ public class Task14_Age : ITask
         "Правильный учёт ещё не наступившего дня рождения",
         "Некорректная дата не роняет программу",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Возраст показан в годах, месяцах и днях.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Проверяй, что дата не в будущем.";
 
@@ -37,14 +39,11 @@ public class Task14_Age : ITask
         }
         int years = today.Year - birth.Year;
         if (birth.AddYears(years) > today) years--;
-        DateTime current = birth.AddYears(years);
+        DateTime birthday = birth.AddYears(years);
         int months = 0;
-        while (current.AddMonths(1) <= today)
-        {
-            current = current.AddMonths(1);
+        while (birthday.AddMonths(months + 1) <= today)
             months++;
-        }
-        int days = (today - current).Days;
+        int days = (today - birthday.AddMonths(months)).Days;
         Console.WriteLine($"{years} лет, {months} месяцев, {days} дней");
     }
 }

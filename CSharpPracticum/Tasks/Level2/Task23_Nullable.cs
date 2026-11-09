@@ -8,7 +8,7 @@ public class Task23_Nullable : ITask
     /// <summary>Название задания.</summary>
     public string Title => "Nullable и операторы";
     /// <summary>Описание задания.</summary>
-    public string Description => "Показать работу null, ?? и ?..";
+    public string Description => "Показать работу null, ?? и ?.";
     /// <summary>Условия задания.</summary>
     public string[] Requirements => new[]
     {
@@ -16,6 +16,8 @@ public class Task23_Nullable : ITask
         "??, ?., HasValue и Value",
         "Найденный и отсутствующий ключ",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Все случаи с null обработаны без ошибки.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Значение Value читаем только после проверки HasValue.";
 
@@ -43,6 +45,7 @@ public class Task23_Nullable : ITask
 
     private class Person
     {
+        /// <summary>Имя.</summary>
         public string Name { get; set; }
     }
 }

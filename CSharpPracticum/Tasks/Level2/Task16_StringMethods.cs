@@ -16,6 +16,8 @@ public class Task16_StringMethods : ITask
         "IsPalindrome, WordCount, ReverseString",
         "Примеры на нескольких строках",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Три метода работают для нескольких строк.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Первый параметр метода расширения пишется this string.";
 
@@ -53,7 +55,10 @@ public static class StringExtensions
     public static int WordCount(this string text)
     {
         if (string.IsNullOrWhiteSpace(text)) return 0;
-        return text.Split((char[])null, StringSplitOptions.RemoveEmptyEntries).Length;
+        string clean = "";
+        foreach (char c in text)
+            clean += char.IsLetterOrDigit(c) ? c : ' ';
+        return clean.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
     }
 
     /// <summary>Переворачивает строку.</summary>

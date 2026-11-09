@@ -16,6 +16,8 @@ public class Task31_FileWriter : ITask
         "Dispose",
         "using и using var",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Файл закрывается и повторно открывается для записи.";
     /// <summary>Подсказка.</summary>
     public string Hint => "using сам вызывает Dispose.";
 
@@ -27,19 +29,25 @@ public class Task31_FileWriter : ITask
         {
             writer.WriteLine("Первая строка");
         }
-        using var secondWriter = new FileWriter(path, true);
-        secondWriter.WriteLine("Вторая строка");
-        Console.WriteLine("Записали в файл: " + path);
+        {
+            using var secondWriter = new FileWriter(path, true);
+            secondWriter.WriteLine("Вторая строка");
+        }
+        Console.WriteLine("Содержимое файла:");
+        Console.WriteLine(File.ReadAllText(path));
     }
 
     private class FileWriter : IDisposable
     {
         private readonly StreamWriter writer;
+        /// <summary>Открывает файл.</summary>
         public FileWriter(string path, bool append = false)
         {
             writer = new StreamWriter(path, append);
         }
+        /// <summary>Пишет строку.</summary>
         public void WriteLine(string text) => writer.WriteLine(text);
+        /// <summary>Закрывает файл.</summary>
         public void Dispose() => writer.Dispose();
     }
 }

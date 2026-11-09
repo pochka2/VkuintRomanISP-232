@@ -17,6 +17,8 @@ public class Task19_StackQueue : ITask
         "Удвоение массива",
         "Исключение для пустого",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Стек и очередь работают, пустые коллекции не ломают программу.";
     /// <summary>Подсказка.</summary>
     public string Hint => "У очереди удобно хранить индекс первого элемента.";
 
@@ -51,15 +53,19 @@ public class Task19_StackQueue : ITask
     private class MyStack<T>
     {
         private T[] items = new T[2];
+        /// <summary>Свойство.</summary>
         public int Count { get; private set; }
+        /// <summary>Свойство.</summary>
         public bool IsEmpty => Count == 0;
 
+        /// <summary>Добавляет в стек.</summary>
         public void Push(T item)
         {
             if (Count == items.Length) Array.Resize(ref items, items.Length * 2);
             items[Count++] = item;
         }
 
+        /// <summary>Удаляет из стека.</summary>
         public T Pop()
         {
             if (IsEmpty) throw new InvalidOperationException("Стек пуст.");
@@ -68,6 +74,7 @@ public class Task19_StackQueue : ITask
             return item;
         }
 
+        /// <summary>Смотрит первый элемент.</summary>
         public T Peek()
         {
             if (IsEmpty) throw new InvalidOperationException("Стек пуст.");
@@ -79,9 +86,12 @@ public class Task19_StackQueue : ITask
     {
         private T[] items = new T[2];
         private int start;
+        /// <summary>Свойство.</summary>
         public int Count { get; private set; }
+        /// <summary>Свойство.</summary>
         public bool IsEmpty => Count == 0;
 
+        /// <summary>Добавляет в очередь.</summary>
         public void Enqueue(T item)
         {
             if (Count == items.Length)
@@ -96,6 +106,7 @@ public class Task19_StackQueue : ITask
             Count++;
         }
 
+        /// <summary>Удаляет из очереди.</summary>
         public T Dequeue()
         {
             if (IsEmpty) throw new InvalidOperationException("Очередь пуста.");
@@ -106,6 +117,7 @@ public class Task19_StackQueue : ITask
             return item;
         }
 
+        /// <summary>Смотрит первый элемент.</summary>
         public T Peek()
         {
             if (IsEmpty) throw new InvalidOperationException("Очередь пуста.");

@@ -16,6 +16,8 @@ public class Task09_ArrayStats : ITask
         "Без LINQ",
         "Пустой массив не должен ломать программу",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Найдены минимум, максимум, сумма и среднее.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Начни min и max с первого элемента массива.";
 

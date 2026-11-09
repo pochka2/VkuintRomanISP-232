@@ -17,6 +17,8 @@ public class Task35_GitAdvanced : ITask
         "feature/rebase-demo и squash",
         "Вывод команд в git-notes.md",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Настройки Git, PR и rebase отражены в git-notes.md.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Git-команды и результаты собраны в файле git-notes.md.";
 

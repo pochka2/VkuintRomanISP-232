@@ -16,6 +16,8 @@ public class Task26_Discounts : ITask
         "Нет скидки, VIP 10%, промо 20%",
         "PriceCalculator принимает стратегию",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Цены с разными скидками посчитаны правильно.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Калькулятор должен работать с любым видом скидки.";
 
@@ -35,24 +37,30 @@ public class Task26_Discounts : ITask
 
     private interface IDiscountStrategy
     {
+        /// <summary>Применяет скидку.</summary>
         decimal Apply(decimal price);
     }
     private class NoDiscount : IDiscountStrategy
     {
+        /// <summary>Применяет скидку.</summary>
         public decimal Apply(decimal price) => price;
     }
     private class VipDiscount : IDiscountStrategy
     {
+        /// <summary>Применяет скидку.</summary>
         public decimal Apply(decimal price) => price * 0.9m;
     }
     private class PromoDiscount : IDiscountStrategy
     {
+        /// <summary>Применяет скидку.</summary>
         public decimal Apply(decimal price) => price * 0.8m;
     }
     private class PriceCalculator
     {
         private readonly IDiscountStrategy strategy;
+        /// <summary>Создаёт калькулятор.</summary>
         public PriceCalculator(IDiscountStrategy strategy) { this.strategy = strategy; }
+        /// <summary>Вычисляет цену.</summary>
         public decimal Calculate(decimal price) => strategy.Apply(price);
     }
 }

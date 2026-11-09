@@ -16,6 +16,8 @@ public class Task29_Notifications : ITask
         "Email, Sms, Push",
         "NotificationFactory.Create(NotificationType)",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Все три вида уведомлений работают.";
     /// <summary>Подсказка.</summary>
     public string Hint => "В фабрике удобно использовать switch.";
 
@@ -32,22 +34,27 @@ public class Task29_Notifications : ITask
     private enum NotificationType { Email, Sms, Push }
     private interface INotification
     {
+        /// <summary>Отправляет сообщение.</summary>
         void Send(string message);
     }
     private class EmailNotification : INotification
     {
+        /// <summary>Отправляет сообщение.</summary>
         public void Send(string message) => Console.WriteLine("Email: " + message);
     }
     private class SmsNotification : INotification
     {
+        /// <summary>Отправляет сообщение.</summary>
         public void Send(string message) => Console.WriteLine("SMS: " + message);
     }
     private class PushNotification : INotification
     {
+        /// <summary>Отправляет сообщение.</summary>
         public void Send(string message) => Console.WriteLine("Push: " + message);
     }
     private static class NotificationFactory
     {
+        /// <summary>Создаёт уведомление.</summary>
         public static INotification Create(NotificationType type)
         {
             return type switch

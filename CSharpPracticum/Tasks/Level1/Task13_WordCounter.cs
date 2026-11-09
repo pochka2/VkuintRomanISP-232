@@ -16,6 +16,8 @@ public class Task13_WordCounter : ITask
         "Убрать знаки пунктуации и регистр",
         "Отсортировать по частоте",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Все слова посчитаны по убыванию частоты.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Раздели строку через Split и используй OrderByDescending.";
 
@@ -24,8 +26,10 @@ public class Task13_WordCounter : ITask
     {
         Console.Write("Текст: ");
         string text = Console.ReadLine() ?? "";
-        char[] separators = { ' ', ',', '.', '!', '?', ';', ':', '-', '\t', '\n', '\r', '(', ')' };
-        string[] words = text.ToLower().Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        string clean = "";
+        foreach (char c in text.ToLower())
+            clean += char.IsLetterOrDigit(c) ? c : ' ';
+        string[] words = clean.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         Dictionary<string, int> counts = new Dictionary<string, int>();
         foreach (string word in words)
         {

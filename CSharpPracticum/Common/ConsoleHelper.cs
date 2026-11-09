@@ -9,7 +9,9 @@ public static class ConsoleHelper
         while (true)
         {
             Console.Write(message);
-            if (int.TryParse(Console.ReadLine(), out int number))
+            string input = Console.ReadLine();
+            if (input == null) throw new InvalidOperationException("Ввод завершён.");
+            if (int.TryParse(input, out int number))
                 return number;
             Console.WriteLine("Введите целое число.");
         }
@@ -21,7 +23,9 @@ public static class ConsoleHelper
         while (true)
         {
             Console.Write(message);
-            if (double.TryParse(Console.ReadLine(), out double number))
+            string input = Console.ReadLine();
+            if (input == null) throw new InvalidOperationException("Ввод завершён.");
+            if (double.TryParse(input, out double number))
                 return number;
             Console.WriteLine("Введите число.");
         }

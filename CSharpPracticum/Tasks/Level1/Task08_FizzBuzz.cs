@@ -16,6 +16,8 @@ public class Task08_FizzBuzz : ITask
         "3 -> Fizz, 5 -> Buzz",
         "Сначала проверить 15",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Числа от 1 до 100 выведены с заменами.";
     /// <summary>Подсказка.</summary>
     public string Hint => "if / else if.";
 

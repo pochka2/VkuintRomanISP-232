@@ -16,6 +16,8 @@ public class Task18_Parsing : ITask
         "Parse с FormatException",
         "Проверить число и abc",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Оба способа обрабатывают 123 и abc.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Каждый способ в отдельном методе.";
 

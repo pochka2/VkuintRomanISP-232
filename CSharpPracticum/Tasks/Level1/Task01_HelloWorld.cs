@@ -15,6 +15,8 @@ public class Task01_HelloWorld : ITask
         "Console.WriteLine, DateTime.Now",
         "Формат даты dd.MM.yyyy",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Выведены приветствие и текущая дата.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Используй DateTime.Now.ToString(\"dd.MM.yyyy\").";
 

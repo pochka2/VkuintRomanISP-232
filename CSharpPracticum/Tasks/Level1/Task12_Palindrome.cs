@@ -16,6 +16,8 @@ public class Task12_Palindrome : ITask
         "Без LINQ Reverse",
         "Пустая строка — палиндром",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Палиндром определяется без учёта регистра и пробелов.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Можно сравнивать символы с двух концов.";
 

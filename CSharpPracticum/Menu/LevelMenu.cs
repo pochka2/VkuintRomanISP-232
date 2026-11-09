@@ -16,6 +16,7 @@ public static class LevelMenu
             Console.WriteLine("0. Назад");
             Console.Write("Выберите задание: ");
             string input = Console.ReadLine()?.Trim().ToLower();
+            if (input == null) return;
             if (input == "0" || input == "q")
                 return;
             if (!int.TryParse(input, out int number) || !tasks.TryGetValue(number, out ITask taskToRun))
@@ -29,6 +30,7 @@ public static class LevelMenu
             Console.WriteLine("Требования:");
             foreach (string requirement in taskToRun.Requirements)
                 Console.WriteLine("- " + requirement);
+            Console.WriteLine("Ожидаемый результат: " + taskToRun.ExpectedResult);
             Console.WriteLine("Подсказка: " + taskToRun.Hint);
             Console.WriteLine(new string('-', 50));
             try
@@ -40,7 +42,7 @@ public static class LevelMenu
                 Console.WriteLine("Ошибка: " + ex.Message);
             }
             Console.WriteLine("\nНажмите Enter для возврата в меню...");
-            Console.ReadLine();
+            if (Console.ReadLine() == null) return;
         }
     }
 }

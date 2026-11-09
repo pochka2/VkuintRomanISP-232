@@ -17,6 +17,8 @@ public class Task33_Employees : ITask
         "GroupBy и Average",
         "Where старше 30",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Выведены топ-3, средняя зарплата и фильтр по возрасту.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Здесь пригодятся OrderByDescending, Take и GroupBy.";
 
@@ -44,10 +46,15 @@ public class Task33_Employees : ITask
 
     private class Employee
     {
+        /// <summary>Имя.</summary>
         public string Name { get; }
+        /// <summary>Свойство.</summary>
         public int Age { get; }
+        /// <summary>Свойство.</summary>
         public decimal Salary { get; }
+        /// <summary>Свойство.</summary>
         public string Department { get; }
+        /// <summary>Создаёт сотрудника.</summary>
         public Employee(string name, int age, decimal salary, string department)
         {
             Name = name;

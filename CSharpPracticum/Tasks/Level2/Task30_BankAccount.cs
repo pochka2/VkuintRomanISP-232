@@ -16,6 +16,8 @@ public class Task30_BankAccount : ITask
         "Deposit и Withdraw",
         "Собственное InsufficientFundsException",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Деньги не уходят в минус, ошибка обрабатывается.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Перед снятием проверь баланс.";
 
@@ -33,18 +35,22 @@ public class Task30_BankAccount : ITask
 
     private class InsufficientFundsException : Exception
     {
+        /// <summary>Создаёт ошибку.</summary>
         public InsufficientFundsException(string message) : base(message) { }
     }
 
     private class BankAccount
     {
         private decimal balance;
+        /// <summary>Свойство.</summary>
         public decimal Balance => balance;
+        /// <summary>Пополняет счёт.</summary>
         public void Deposit(decimal amount)
         {
             if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount));
             balance += amount;
         }
+        /// <summary>Снимает деньги.</summary>
         public void Withdraw(decimal amount)
         {
             if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount));

@@ -9,6 +9,8 @@ public interface ITask
     string Description { get; }
     /// <summary>Условия задания.</summary>
     string[] Requirements { get; }
+    /// <summary>Что должно получиться.</summary>
+    string ExpectedResult { get; }
     /// <summary>Подсказка по решению.</summary>
     string Hint { get; }
     /// <summary>Запуск задания.</summary>

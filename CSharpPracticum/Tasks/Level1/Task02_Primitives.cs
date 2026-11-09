@@ -15,6 +15,8 @@ public class Task02_Primitives : ITask
         "int, long, double, float, decimal, bool, char, string",
         "GetType().Name",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Показаны значения всех типов и их названия.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Для float пишем f, для decimal — m.";
 

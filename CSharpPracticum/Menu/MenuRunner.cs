@@ -60,6 +60,7 @@ public static class MenuRunner
             Console.WriteLine("4. Выход");
             Console.Write("Выберите уровень: ");
             string input = Console.ReadLine()?.Trim().ToLower();
+            if (input == null) return;
             if (input == "4" || input == "0" || input == "q")
                 return;
             if (input == "1") LevelMenu.Show(1, first);

@@ -17,6 +17,8 @@ public class Task10_Sorting : ITask
         "10 000 чисел",
         "Замер через Stopwatch",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Обе сортировки дают одинаковый массив и время работы.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Перед замерами сделай две копии массива.";
 

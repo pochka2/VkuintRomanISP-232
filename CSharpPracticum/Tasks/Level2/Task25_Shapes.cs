@@ -16,6 +16,8 @@ public class Task25_Shapes : ITask
         "Circle, Rectangle, Triangle",
         "Пять фигур, сортировка по площади",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Фигуры отсортированы по площади.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Для треугольника можно применить формулу Герона.";
 
@@ -42,31 +44,42 @@ public class Task25_Shapes : ITask
 
     private interface IShape
     {
+        /// <summary>Площадь фигуры.</summary>
         double Area();
+        /// <summary>Периметр фигуры.</summary>
         double Perimeter();
     }
 
     private class Circle : IShape
     {
         private readonly double radius;
+        /// <summary>Создаёт круг.</summary>
         public Circle(double radius) { this.radius = radius; }
+        /// <summary>Считает площадь.</summary>
         public double Area() => Math.PI * radius * radius;
+        /// <summary>Считает периметр.</summary>
         public double Perimeter() => 2 * Math.PI * radius;
     }
 
     private class Rectangle : IShape
     {
         private readonly double width, height;
+        /// <summary>Создаёт прямоугольник.</summary>
         public Rectangle(double width, double height) { this.width = width; this.height = height; }
+        /// <summary>Считает площадь.</summary>
         public double Area() => width * height;
+        /// <summary>Считает периметр.</summary>
         public double Perimeter() => 2 * (width + height);
     }
 
     private class Triangle : IShape
     {
         private readonly double a, b, c;
+        /// <summary>Создаёт треугольник.</summary>
         public Triangle(double a, double b, double c) { this.a = a; this.b = b; this.c = c; }
+        /// <summary>Считает периметр.</summary>
         public double Perimeter() => a + b + c;
+        /// <summary>Считает площадь.</summary>
         public double Area()
         {
             double s = Perimeter() / 2;

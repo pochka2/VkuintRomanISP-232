@@ -16,6 +16,8 @@ public class Task15_GitBasics : ITask
         "Конфликт строки README.md",
         "git log --graph --oneline --all в git-notes.md",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Есть merge, разрешённый конфликт и история в git-notes.md.";
     /// <summary>Подсказка.</summary>
     public string Hint => "Результаты команд находятся в git-notes.md.";
 

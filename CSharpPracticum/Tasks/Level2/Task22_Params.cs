@@ -13,18 +13,20 @@ public class Task22_Params : ITask
     public string[] Requirements => new[]
     {
         "Sum(params int[])",
-        "Перегрузка для набора чисел",
+        "Перегрузка для списка чисел",
         "Пустой вызов равен нулю",
     };
+    /// <summary>Ожидаемый результат.</summary>
+    public string ExpectedResult => "Сумма верная для чисел, массива и пустого вызова.";
     /// <summary>Подсказка.</summary>
-    public string Hint => "params int[] и просто int[] имеют одну сигнатуру, поэтому вторая версия принимает IEnumerable<int>.";
+    public string Hint => "Проверь сумму чисел, массива и пустой вызов.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()
     {
         Console.WriteLine("Аргументы: " + Sum(1, 2, 3));
         Console.WriteLine("Массив: " + Sum(new[] { 1, 2, 3 }));
-        Console.WriteLine("IEnumerable: " + Sum((IEnumerable<int>)new[] { 1, 2, 3 }));
+        Console.WriteLine("Список: " + Sum(new List<int> { 1, 2, 3 }));
         Console.WriteLine("Пусто: " + Sum());
     }
 
@@ -35,7 +37,7 @@ public class Task22_Params : ITask
         return sum;
     }
 
-    private static int Sum(IEnumerable<int> numbers)
+    private static int Sum(List<int> numbers)
     {
         int sum = 0;
         foreach (int number in numbers) sum += number;
