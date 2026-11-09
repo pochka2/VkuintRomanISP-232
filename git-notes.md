@@ -108,3 +108,9 @@ d2489b5 merge: level-1
 ### What I learned
 
 Conventional Commits показывают назначение изменений. Rebase со squash объединяет три коммита в один.
+
+Шаг 1 для примера rebase.
+
+Шаг 2 для примера rebase.
+
+Шаг 3 для примера rebase.
