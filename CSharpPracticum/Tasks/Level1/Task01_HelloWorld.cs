@@ -16,7 +16,7 @@ public class Task01_HelloWorld : ITask
         "Формат даты dd.MM.yyyy",
     };
     /// <summary>Подсказка.</summary>
-    public string Hint => "DateTime.Now.ToString("dd.MM.yyyy")";
+    public string Hint => "Используй DateTime.Now.ToString(\"dd.MM.yyyy\").";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()
