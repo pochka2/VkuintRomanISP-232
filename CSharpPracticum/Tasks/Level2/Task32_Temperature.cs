@@ -35,7 +35,7 @@ public class Task32_Temperature : ITask
     private class Temperature
     {
         private double celsius;
-        /// <summary>Свойство.</summary>
+        /// <summary>Температура в градусах Цельсия.</summary>
         public double Celsius
         {
             get => celsius;
@@ -45,7 +45,7 @@ public class Task32_Temperature : ITask
                 celsius = value;
             }
         }
-        /// <summary>Свойство.</summary>
+        /// <summary>Температура в градусах Фаренгейта.</summary>
         public double Fahrenheit => Celsius * 9 / 5 + 32;
     }
 }
