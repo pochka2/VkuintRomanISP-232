@@ -53,7 +53,8 @@ public static class MenuRunner
         };
         while (true)
         {
-            Console.WriteLine("\n=== Практикум по C# ===");
+            Console.Clear();
+            Console.WriteLine("=== Практикум по C# ===");
             Console.WriteLine("1. Уровень 1 — Базовый (задания 1–15)");
             Console.WriteLine("2. Уровень 2 — Средний (задания 16–35)");
             Console.WriteLine("3. Уровень 3 — Продвинутый (задания 36–50)");
@@ -65,8 +66,13 @@ public static class MenuRunner
                 return;
             if (input == "1") LevelMenu.Show(1, first);
             else if (input == "2") LevelMenu.Show(2, second);
-            else if (input == "3") Console.WriteLine("Третий уровень пока не выполнен.");
-            else Console.WriteLine("Неверный пункт меню.");
+            else
+            {
+                if (input == "3") Console.WriteLine("Третий уровень пока не выполнен.");
+                else Console.WriteLine("Неверный пункт меню.");
+                Console.WriteLine("Нажмите Enter для продолжения...");
+                if (Console.ReadLine() == null) return;
+            }
         }
     }
 }
