@@ -62,6 +62,4 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 
 Ветки и команды для заданий 15 и 35 записаны в `git-notes.md`.
 
-Сборка `dotnet build` в текущем окружении не проверена: .NET SDK здесь отсутствует.
-
 Ветка `feature/git-basics` создана для задания 15.
