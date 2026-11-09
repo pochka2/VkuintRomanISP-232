@@ -47,7 +47,7 @@ public class Task27_Students : ITask
     {
         /// <summary>Имя.</summary>
         public string Name { get; }
-        /// <summary>Свойство.</summary>
+        /// <summary>Средняя оценка.</summary>
         public double AverageGrade { get; }
         /// <summary>Создаёт студента.</summary>
         public Student(string name, double averageGrade)
