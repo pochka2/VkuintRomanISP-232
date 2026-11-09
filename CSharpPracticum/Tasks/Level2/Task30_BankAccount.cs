@@ -42,7 +42,7 @@ public class Task30_BankAccount : ITask
     private class BankAccount
     {
         private decimal balance;
-        /// <summary>Свойство.</summary>
+        /// <summary>Остаток на счёте.</summary>
         public decimal Balance => balance;
         /// <summary>Пополняет счёт.</summary>
         public void Deposit(decimal amount)
