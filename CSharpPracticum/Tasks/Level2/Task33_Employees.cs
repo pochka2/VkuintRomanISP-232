@@ -48,11 +48,11 @@ public class Task33_Employees : ITask
     {
         /// <summary>Имя.</summary>
         public string Name { get; }
-        /// <summary>Свойство.</summary>
+        /// <summary>Возраст.</summary>
         public int Age { get; }
-        /// <summary>Свойство.</summary>
+        /// <summary>Зарплата.</summary>
         public decimal Salary { get; }
-        /// <summary>Свойство.</summary>
+        /// <summary>Отдел.</summary>
         public string Department { get; }
         /// <summary>Создаёт сотрудника.</summary>
         public Employee(string name, int age, decimal salary, string department)
