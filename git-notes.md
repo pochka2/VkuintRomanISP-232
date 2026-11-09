@@ -85,7 +85,9 @@ git log --oneline
 
 Уровень 2: https://github.com/pochka2/VkuintRomanISP-232/pull/2
 
-Отдельный PR для задания 35 оформляется в GitHub.
+Задание 35: https://github.com/pochka2/VkuintRomanISP-232/pull/3
+
+Ветка feature/git-basics: https://github.com/pochka2/VkuintRomanISP-232/pull/4
 
 ### Rebase result
 
@@ -108,3 +110,11 @@ d2489b5 merge: level-1
 ### What I learned
 
 Conventional Commits показывают назначение изменений. Rebase со squash объединяет три коммита в один.
+
+### Rebase в GitHub
+
+В ветке `feature/rebase-demo` были сделаны три коммита (`a3f907a`, `e5f54a0`, `8b3a7d8`). После объединения ветка указывает на `eb10d8a` — `docs: task 35 - squash rebase demo`. Эта история отдельно от локального примера выше.
+
+### Проверка .gitignore
+
+Есть `bin/`, `obj/`, `.vs/`, `.idea/`, `*.user`, `*.suo`.
