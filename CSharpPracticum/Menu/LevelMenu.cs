@@ -10,6 +10,7 @@ public static class LevelMenu
     {
         while (true)
         {
+            Console.Clear();
             Console.WriteLine($"\n--- Уровень {level}: {(level == 1 ? "Базовый" : level == 2 ? "Средний" : "Продвинутый")} ---");
             foreach (var task in tasks)
                 Console.WriteLine($"{task.Key}. {task.Value.Title}");
@@ -22,9 +23,12 @@ public static class LevelMenu
             if (!int.TryParse(input, out int number) || !tasks.TryGetValue(number, out ITask taskToRun))
             {
                 Console.WriteLine("Такого задания нет.");
+                Console.WriteLine("Нажмите Enter для продолжения...");
+                if (Console.ReadLine() == null) return;
                 continue;
             }
-            Console.WriteLine("\n" + new string('=', 50));
+            Console.Clear();
+            Console.WriteLine(new string('=', 50));
             Console.WriteLine($"Задание {number}. {taskToRun.Title}");
             Console.WriteLine("Описание: " + taskToRun.Description);
             Console.WriteLine("Требования:");
