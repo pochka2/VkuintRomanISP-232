@@ -53,9 +53,9 @@ public class Task19_StackQueue : ITask
     private class MyStack<T>
     {
         private T[] items = new T[2];
-        /// <summary>Свойство.</summary>
+        /// <summary>Количество элементов.</summary>
         public int Count { get; private set; }
-        /// <summary>Свойство.</summary>
+        /// <summary>Проверяет, пустая ли коллекция.</summary>
         public bool IsEmpty => Count == 0;
 
         /// <summary>Добавляет в стек.</summary>
@@ -86,9 +86,9 @@ public class Task19_StackQueue : ITask
     {
         private T[] items = new T[2];
         private int start;
-        /// <summary>Свойство.</summary>
+        /// <summary>Количество элементов.</summary>
         public int Count { get; private set; }
-        /// <summary>Свойство.</summary>
+        /// <summary>Проверяет, пустая ли коллекция.</summary>
         public bool IsEmpty => Count == 0;
 
         /// <summary>Добавляет в очередь.</summary>
