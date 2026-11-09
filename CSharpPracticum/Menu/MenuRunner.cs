@@ -1,5 +1,6 @@
 using CSharpPracticum.Common;
 using CSharpPracticum.Tasks.Level1;
+using CSharpPracticum.Tasks.Level2;
 
 namespace CSharpPracticum.Menu;
 
@@ -27,7 +28,29 @@ public static class MenuRunner
             [14] = new Task14_Age(),
             [15] = new Task15_GitBasics()
         };
-        var second = new SortedDictionary<int, ITask>();
+        var second = new SortedDictionary<int, ITask>
+        {
+            [16] = new Task16_StringMethods(),
+            [17] = new Task17_StringBuilder(),
+            [18] = new Task18_Parsing(),
+            [19] = new Task19_StackQueue(),
+            [20] = new Task20_Generics(),
+            [21] = new Task21_WeekDays(),
+            [22] = new Task22_Params(),
+            [23] = new Task23_Nullable(),
+            [24] = new Task24_Animals(),
+            [25] = new Task25_Shapes(),
+            [26] = new Task26_Discounts(),
+            [27] = new Task27_Students(),
+            [28] = new Task28_Points(),
+            [29] = new Task29_Notifications(),
+            [30] = new Task30_BankAccount(),
+            [31] = new Task31_FileWriter(),
+            [32] = new Task32_Temperature(),
+            [33] = new Task33_Employees(),
+            [34] = new Task34_WordGroups(),
+            [35] = new Task35_GitAdvanced()
+        };
         while (true)
         {
             Console.WriteLine("\n=== Практикум по C# ===");
