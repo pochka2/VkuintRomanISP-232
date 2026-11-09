@@ -62,4 +62,3 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 
 Ветки и команды для заданий 15 и 35 записаны в `git-notes.md`.
 
-Ветка `feature/git-basics` создана для задания 15.
