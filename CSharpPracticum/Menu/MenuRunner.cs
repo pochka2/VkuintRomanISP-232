@@ -57,19 +57,17 @@ public static class MenuRunner
             Console.WriteLine("=== Практикум по C# ===");
             Console.WriteLine("1. Уровень 1 — Базовый (задания 1–15)");
             Console.WriteLine("2. Уровень 2 — Средний (задания 16–35)");
-            Console.WriteLine("3. Уровень 3 — Продвинутый (задания 36–50)");
-            Console.WriteLine("4. Выход");
+            Console.WriteLine("3. Выход");
             Console.Write("Выберите уровень: ");
             string input = Console.ReadLine()?.Trim().ToLower();
             if (input == null) return;
-            if (input == "4" || input == "0" || input == "q")
+            if (input == "3" || input == "0" || input == "q")
                 return;
             if (input == "1") LevelMenu.Show(1, first);
             else if (input == "2") LevelMenu.Show(2, second);
             else
             {
-                if (input == "3") Console.WriteLine("Третий уровень пока не выполнен.");
-                else Console.WriteLine("Неверный пункт меню.");
+                Console.WriteLine("Неверный пункт меню.");
                 Console.WriteLine("Нажмите Enter для продолжения...");
                 if (Console.ReadLine() == null) return;
             }
