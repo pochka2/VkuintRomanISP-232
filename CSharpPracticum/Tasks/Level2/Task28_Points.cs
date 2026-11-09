@@ -34,9 +34,9 @@ public class Task28_Points : ITask
 
     private class Point : IEquatable<Point>
     {
-        /// <summary>Свойство.</summary>
+        /// <summary>Координата X.</summary>
         public int X { get; }
-        /// <summary>Свойство.</summary>
+        /// <summary>Координата Y.</summary>
         public int Y { get; }
         /// <summary>Создаёт точку.</summary>
         public Point(int x, int y) { X = x; Y = y; }
