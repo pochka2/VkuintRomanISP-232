@@ -23,7 +23,8 @@ public class Task22_Params : ITask
     public void Run()
     {
         Console.WriteLine("Аргументы: " + Sum(1, 2, 3));
-        Console.WriteLine("Массив: " + Sum((IEnumerable<int>)new[] { 1, 2, 3 }));
+        Console.WriteLine("Массив: " + Sum(new[] { 1, 2, 3 }));
+        Console.WriteLine("IEnumerable: " + Sum((IEnumerable<int>)new[] { 1, 2, 3 }));
         Console.WriteLine("Пусто: " + Sum());
     }
 
