@@ -56,7 +56,12 @@ public static class MenuRunner
         {
             [36] = new Task36_Duplicates(),
             [37] = new Task37_Fibonacci(),
-            [38] = new Task38_Collections()
+            [38] = new Task38_Collections(),
+            [39] = new Task39_EvenNumbers(),
+            [40] = new Task40_Download(),
+            [41] = new Task41_WhenAll(),
+            [42] = new Task42_Cancellation(),
+            [43] = new Task43_Exceptions()
         };
         while (true)
         {
@@ -64,7 +69,7 @@ public static class MenuRunner
             Console.WriteLine("=== Практикум по C# ===");
             Console.WriteLine("1. Уровень 1 — Базовый (задания 1–15)");
             Console.WriteLine("2. Уровень 2 — Средний (задания 16–35)");
-            Console.WriteLine("3. Уровень 3 — Продвинутый (задания 36–38)");
+            Console.WriteLine("3. Уровень 3 — Продвинутый (задания 36–43)");
             Console.WriteLine("4. Выход");
             Console.Write("Выберите уровень: ");
             string input = Console.ReadLine()?.Trim().ToLower();
