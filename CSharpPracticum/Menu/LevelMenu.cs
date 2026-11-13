@@ -11,7 +11,7 @@ public static class LevelMenu
         while (true)
         {
             Console.Clear();
-            Console.WriteLine($"\n--- Уровень {level}: {(level == 1 ? "Базовый" : "Средний")} ---");
+            Console.WriteLine($"\n--- Уровень {level}: {(level == 1 ? "Базовый" : level == 2 ? "Средний" : "Продвинутый")} ---");
             foreach (var task in tasks)
                 Console.WriteLine($"{task.Key}. {task.Value.Title}");
             Console.WriteLine("0. Назад");

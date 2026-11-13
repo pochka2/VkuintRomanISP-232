@@ -1,6 +1,7 @@
 using CSharpPracticum.Common;
 using CSharpPracticum.Tasks.Level1;
 using CSharpPracticum.Tasks.Level2;
+using CSharpPracticum.Tasks.Level3;
 
 namespace CSharpPracticum.Menu;
 
@@ -51,20 +52,28 @@ public static class MenuRunner
             [34] = new Task34_WordGroups(),
             [35] = new Task35_GitAdvanced()
         };
+        var third = new SortedDictionary<int, ITask>
+        {
+            [36] = new Task36_Duplicates(),
+            [37] = new Task37_Fibonacci(),
+            [38] = new Task38_Collections()
+        };
         while (true)
         {
             Console.Clear();
             Console.WriteLine("=== Практикум по C# ===");
             Console.WriteLine("1. Уровень 1 — Базовый (задания 1–15)");
             Console.WriteLine("2. Уровень 2 — Средний (задания 16–35)");
-            Console.WriteLine("3. Выход");
+            Console.WriteLine("3. Уровень 3 — Продвинутый (задания 36–38)");
+            Console.WriteLine("4. Выход");
             Console.Write("Выберите уровень: ");
             string input = Console.ReadLine()?.Trim().ToLower();
             if (input == null) return;
-            if (input == "3" || input == "0" || input == "q")
+            if (input == "4" || input == "0" || input == "q")
                 return;
             if (input == "1") LevelMenu.Show(1, first);
             else if (input == "2") LevelMenu.Show(2, second);
+            else if (input == "3") LevelMenu.Show(3, third);
             else
             {
                 Console.WriteLine("Неверный пункт меню.");
