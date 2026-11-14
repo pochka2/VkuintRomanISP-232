@@ -124,3 +124,218 @@ ORDER BY EmployeeId;
 ### Вывод
 
 `WHERE` выбирает строки по условию, `YEAR()` помогает отобрать записи по году, `LIKE` ищет по началу имени, а `BETWEEN` проверяет диапазон с включёнными границами.
+
+## Task 04 — ORDER BY + TOP
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Три самых высоких зарплаты.
+SELECT TOP 3 EmployeeName, Salary
+FROM Employees
+ORDER BY Salary DESC;
+
+-- Пять сотрудников с самой ранней датой найма.
+SELECT TOP 5 EmployeeName, HireDate
+FROM Employees
+ORDER BY HireDate ASC;
+
+-- Сначала по отделу, затем по зарплате.
+SELECT DepartmentId, EmployeeName, Salary
+FROM Employees
+ORDER BY DepartmentId ASC, Salary DESC;
+```
+
+### Результат
+
+Топ-3 по зарплате:
+
+| Сотрудник | Зарплата |
+| --- | ---: |
+| Алексей Лебедев | 90000 |
+| Пётр Сидоров | 72000 |
+| Анна Иванова | 65000 |
+
+Топ-5 по дате найма (от самой ранней):
+
+| Сотрудник | HireDate |
+| --- | --- |
+| Алексей Лебедев | 2018-05-25 |
+| Пётр Сидоров | 2019-07-01 |
+| Анна Иванова | 2020-03-15 |
+| Ольга Смирнова | 2020-09-05 |
+| Мария Кузнецова | 2021-11-20 |
+
+По отделам: №1 — Пётр, Анна, Мария, Иван; №2 — Ольга, Дмитрий, Елена; №3 — Сергей, Наталья; №4 — Алексей. Внутри отделов зарплаты идут по убыванию.
+
+### Вывод
+
+`TOP` ограничивает количество строк, `ORDER BY` задаёт сортировку. При нескольких столбцах сортировка идёт по порядку их перечисления.
+
+## Task 05 — Агрегация: COUNT, SUM, AVG, MIN, MAX
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Количество, сумма, средняя, минимум и максимум.
+SELECT
+    COUNT(*) AS EmployeesCount,
+    SUM(Salary) AS TotalSalary,
+    ROUND(AVG(Salary), 2) AS AverageSalary,
+    MIN(Salary) AS MinSalary,
+    MAX(Salary) AS MaxSalary
+FROM Employees;
+
+-- Сколько сотрудников получают больше 50000.
+SELECT COUNT(*) AS SalaryAbove50000
+FROM Employees
+WHERE Salary > 50000;
+```
+
+### Результат
+
+| Показатель | Значение |
+| --- | ---: |
+| Всего сотрудников | 10 |
+| Сумма зарплат | 589000.00 |
+| Средняя зарплата | 58900.00 |
+| Минимальная зарплата | 43000.00 |
+| Максимальная зарплата | 90000.00 |
+| Зарплата выше 50000 | 7 |
+
+### Вывод
+
+`COUNT` считает записи, `SUM` складывает значения, `AVG` находит среднее, `MIN` и `MAX` — границы. `ROUND` округляет среднюю зарплату до двух знаков.
+
+## Task 06 — GROUP BY: статистика по отделам
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    DepartmentId,
+    COUNT(*) AS EmployeesCount,
+    ROUND(AVG(Salary), 2) AS AverageSalary,
+    SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY DepartmentId
+ORDER BY AverageSalary DESC;
+```
+
+### Результат
+
+| DepartmentId | Сотрудников | Средняя зарплата | Сумма |
+| ---: | ---: | ---: | ---: |
+| 4 | 1 | 90000.00 | 90000.00 |
+| 1 | 4 | 60000.00 | 240000.00 |
+| 2 | 3 | 57000.00 | 171000.00 |
+| 3 | 2 | 44000.00 | 88000.00 |
+
+### Вывод
+
+`GROUP BY` собирает сотрудников одного отдела в группу. Для каждой группы считаются количество сотрудников, средняя и общая зарплата.
+
+## Task 07 — GROUP BY + HAVING
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Отделы, где больше двух сотрудников.
+SELECT DepartmentId, COUNT(*) AS EmployeesCount
+FROM Employees
+GROUP BY DepartmentId
+HAVING COUNT(*) > 2
+ORDER BY DepartmentId;
+
+-- Отделы, где средняя зарплата выше 55000.
+SELECT DepartmentId, ROUND(AVG(Salary), 2) AS AverageSalary
+FROM Employees
+GROUP BY DepartmentId
+HAVING AVG(Salary) > 55000
+ORDER BY DepartmentId;
+
+-- Отделы, где сумма зарплат выше 150000.
+SELECT DepartmentId, SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY DepartmentId
+HAVING SUM(Salary) > 150000
+ORDER BY DepartmentId;
+```
+
+### Результат
+
+Отделы, в которых больше двух сотрудников:
+
+| DepartmentId | Сотрудников |
+| ---: | ---: |
+| 1 | 4 |
+| 2 | 3 |
+
+Отделы со средней зарплатой выше 55000:
+
+| DepartmentId | Средняя зарплата |
+| ---: | ---: |
+| 1 | 60000.00 |
+| 2 | 57000.00 |
+| 4 | 90000.00 |
+
+Отделы с суммой зарплат выше 150000:
+
+| DepartmentId | Сумма зарплат |
+| ---: | ---: |
+| 1 | 240000.00 |
+| 2 | 171000.00 |
+
+### Вывод
+
+`HAVING` проверяет условие после объединения строк в группы. `WHERE` фильтрует отдельные строки до группировки.
+
+## Task 08 — INNER JOIN: сотрудники и отделы
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    e.EmployeeName,
+    d.DepartmentName,
+    e.Salary
+FROM Employees e
+INNER JOIN Departments d ON e.DepartmentId = d.DepartmentId
+ORDER BY d.DepartmentName ASC, e.Salary DESC;
+```
+
+### Результат
+
+На тестовых данных возвращаются все 10 сотрудников с названиями их отделов.
+
+| EmployeeName | DepartmentName | Salary |
+| --- | --- | ---: |
+| Ольга Смирнова | Аналитика | 61000.00 |
+| Дмитрий Орлов | Аналитика | 58000.00 |
+| Елена Волкова | Аналитика | 52000.00 |
+| Алексей Лебедев | Менеджмент | 90000.00 |
+| Пётр Сидоров | Разработка | 72000.00 |
+| Анна Иванова | Разработка | 65000.00 |
+| Мария Кузнецова | Разработка | 55000.00 |
+| Иван Петров | Разработка | 48000.00 |
+| Сергей Морозов | Тестирование | 45000.00 |
+| Наталья Соколова | Тестирование | 43000.00 |
+
+### Вывод
+
+`INNER JOIN` соединяет сотрудников с отделами по `DepartmentId`. Сначала строки сортируются по названию отдела, затем по зарплате по убыванию.

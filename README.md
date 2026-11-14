@@ -86,11 +86,16 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 | 1 | Создание базы и четырёх таблиц | Готово |
 | 2 | INSERT: заполнение тестовыми данными | Готово |
 | 3 | SELECT + WHERE: пять выборок | Готово |
+| 4 | ORDER BY + TOP | Готово |
+| 5 | Агрегация: COUNT, SUM, AVG, MIN, MAX | Готово |
+| 6 | GROUP BY: статистика по отделам | Готово |
+| 7 | GROUP BY + HAVING | Готово |
+| 8 | INNER JOIN: сотрудники и отделы | Готово |
 
 ### Как запустить
 
 1. Открой `database/init.sql` в SQL Server Management Studio (SSMS) и выполни весь скрипт.
-2. Открой `database/sql-notes.md` и выполни запросы из заданий 1–3 в SSMS.
+2. Открой `database/sql-notes.md` и выполни запросы из заданий 1–8 в SSMS.
 
 **Внимание:** `init.sql` каждый раз пересоздаёт базу `PracticeDB` и удаляет все старые данные внутри неё.
 
