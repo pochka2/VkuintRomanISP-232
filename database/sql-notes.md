@@ -243,3 +243,61 @@ ORDER BY AverageSalary DESC;
 ### Вывод
 
 `GROUP BY` собирает сотрудников одного отдела в группу. Для каждой группы считаются количество сотрудников, средняя и общая зарплата.
+
+## Task 07 — GROUP BY + HAVING
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Отделы, где больше двух сотрудников.
+SELECT DepartmentId, COUNT(*) AS EmployeesCount
+FROM Employees
+GROUP BY DepartmentId
+HAVING COUNT(*) > 2
+ORDER BY DepartmentId;
+
+-- Отделы, где средняя зарплата выше 55000.
+SELECT DepartmentId, ROUND(AVG(Salary), 2) AS AverageSalary
+FROM Employees
+GROUP BY DepartmentId
+HAVING AVG(Salary) > 55000
+ORDER BY DepartmentId;
+
+-- Отделы, где сумма зарплат выше 150000.
+SELECT DepartmentId, SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY DepartmentId
+HAVING SUM(Salary) > 150000
+ORDER BY DepartmentId;
+```
+
+### Результат
+
+Отделы, в которых больше двух сотрудников:
+
+| DepartmentId | Сотрудников |
+| ---: | ---: |
+| 1 | 4 |
+| 2 | 3 |
+
+Отделы со средней зарплатой выше 55000:
+
+| DepartmentId | Средняя зарплата |
+| ---: | ---: |
+| 1 | 60000.00 |
+| 2 | 57000.00 |
+| 4 | 90000.00 |
+
+Отделы с суммой зарплат выше 150000:
+
+| DepartmentId | Сумма зарплат |
+| ---: | ---: |
+| 1 | 240000.00 |
+| 2 | 171000.00 |
+
+### Вывод
+
+`HAVING` проверяет условие после объединения строк в группы. `WHERE` фильтрует отдельные строки до группировки.
