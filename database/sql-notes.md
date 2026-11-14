@@ -68,3 +68,59 @@ SELECT COUNT(*) AS EmployeeProjectsCount FROM EmployeeProjects;
 
 В таблицах есть отделы, сотрудники, проекты и назначения сотрудников на проекты. Руководители указаны через `ManagerId`.
 
+## Task 03 — SELECT + WHERE
+
+### SQL
+
+Пять запросов по условиям методички.
+
+```sql
+USE PracticeDB;
+GO
+
+-- 1. Зарплата больше 50000.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE Salary > 50000
+ORDER BY EmployeeId;
+
+-- 2. Принятые на работу в 2023 году.
+SELECT EmployeeId, EmployeeName, HireDate
+FROM Employees
+WHERE YEAR(HireDate) = 2023
+ORDER BY EmployeeId;
+
+-- 3. Имя начинается на букву «А».
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE EmployeeName LIKE N'А%'
+ORDER BY EmployeeId;
+
+-- 4. Сотрудники второго отдела.
+SELECT EmployeeId, EmployeeName, DepartmentId
+FROM Employees
+WHERE DepartmentId = 2
+ORDER BY EmployeeId;
+
+-- 5. Зарплата от 40000 до 60000 включительно.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE Salary BETWEEN 40000 AND 60000
+ORDER BY EmployeeId;
+```
+
+### Результат
+
+Ожидаемые выборки на тестовых данных из `init.sql`:
+
+| Запрос | Сотрудники | Количество |
+| --- | --- | ---: |
+| Зарплата > 50000 | Анна, Пётр, Мария, Ольга, Дмитрий, Елена, Алексей | 7 |
+| Приняты в 2023 году | Иван, Елена | 2 |
+| Имя начинается на «А» | Анна, Алексей | 2 |
+| Отдел №2 | Ольга, Дмитрий, Елена | 3 |
+| Зарплата от 40000 до 60000 | Мария, Иван, Дмитрий, Елена, Сергей, Наталья | 6 |
+
+### Вывод
+
+`WHERE` выбирает строки по условию, `YEAR()` помогает отобрать записи по году, `LIKE` ищет по началу имени, а `BETWEEN` проверяет диапазон с включёнными границами.
