@@ -291,6 +291,18 @@ Check 3: 389a44a GOOD
 e9de375c340a9b324a89653d4935e22c5b2d1637 is the first bad commit
 ```
 
+### Output (git bisect log)
+
+```text
+git bisect start
+git bisect bad 1cff9518c200dce2b72f5d81f1a5f737f71047f4
+git bisect good 5897a8a9c63b35cc6702adbf1a13a21598580bb4
+git bisect bad e9de375c340a9b324a89653d4935e22c5b2d1637
+git bisect good 60b52cdd24c3fab753592b29f9d57a4a0beca758
+git bisect good 389a44a4f7807d369cb8c8d40a95913477d75227
+# first bad commit: e9de375c340a9b324a89653d4935e22c5b2d1637
+```
+
 ### Output (git bisect reset и git log --oneline)
 
 ```text
