@@ -2,21 +2,24 @@
 
 ## Task 15 — Basic git
 
-Локальный пример выполнения задания:
+Локальный учебный пример с веткой main. Основная история GitHub не переписывалась.
 
 ### Commands
 
 ```bash
 git init -b main
-git switch -c level-1
+git add README.md
+git commit -m "chore: prepare git practice"
 git switch -c feature/git-basics
+# Изменена строка в README.md
 git add README.md
 git commit -m "feat: task 15 - edit feature"
-git switch level-1
+git switch main
+# Та же строка изменена другим текстом
 git add README.md
-git commit -m "feat: task 15 - edit main line"
+git commit -m "feat: task 15 - edit main"
 git merge --no-ff feature/git-basics
-# README.md исправлен вручную, маркеры конфликта удалены
+# Конфликт вручную исправлен, маркеры удалены
 git add README.md
 git commit -m "feat: task 15 - resolve merge conflict"
 git log --graph --oneline --all
@@ -33,31 +36,17 @@ Automatic merge failed; fix conflicts and then commit the result.
 ### Output (git log --graph --oneline --all)
 
 ```text
-*   bcf2069 feat: task 15 - resolve merge conflict
-|\  
-| * 6de9057 feat: task 15 - edit feature
-* | 53f408e feat: task 15 - edit main line
-|/  
-* 0792d3a feat: task 14 - solution
-* d6c9366 feat: task 13 - solution
-* 8879e0e feat: task 12 - solution
-* c4ab08d feat: task 11 - solution
-* d4e1ba4 feat: task 10 - solution
-* 94609fc feat: task 09 - solution
-* efe7f6c feat: task 08 - solution
-* a46f8a1 feat: task 07 - solution
-* 62eb683 feat: task 06 - solution
-* ab3fcf7 feat: task 05 - solution
-* 0d60885 feat: task 04 - solution
-* d71b5e8 feat: task 03 - solution
-* afba782 feat: task 02 - solution
-* 353203c feat: task 01 - solution
-* 54ddbfd chore: create console project
+*   6b4526e feat: task 15 - resolve merge conflict
+|\
+| * 487f52e feat: task 15 - edit feature
+* | 43013dc feat: task 15 - edit main
+|/
+* d905a28 chore: prepare git practice
 ```
 
 ### What I learned
 
-Когда две ветки меняют одну строку, Git показывает конфликт. После исправления README.md можно сохранить merge-коммит.
+Если две ветки изменили одну строку, Git требует исправить конфликт перед завершением merge.
 
 ## Task 35 — Branches and rebase
 
@@ -119,15 +108,19 @@ Conventional Commits показывают назначение изменени�
 
 Есть `bin/`, `obj/`, `.vs/`, `.idea/`, `*.user`, `*.suo`.
 
+### Примечание к истории
+
+В истории основного репозитория .gitignore и .editorconfig первоначально добавлялись отдельными коммитами, а объединённый коммит `chore: add gitignore and editorconfig` появился позднее. Старую историю не переписывали.
+
 ## Task 46 — git stash
 
-Локальный учебный пример.
+Выполнено в отдельном локальном учебном репозитории.
 
 ### Commands
 
 ```bash
 git switch main
-# Изменена строка в demo.txt без коммита
+# Изменён demo.txt без коммита
 git stash push -m "task 46: demo"
 git stash list
 git switch level-3
@@ -136,51 +129,61 @@ git stash pop
 git stash list
 ```
 
-### Output
-
-До `stash pop`:
+### Output (до stash pop)
 
 ```text
 stash@{0}: On main: task 46: demo
 ```
 
-После `stash pop`: список пуст. Строка «Незакоммиченное изменение» восстановлена в `demo.txt`.
+### Output (после stash pop)
+
+```text
+git stash list: пустой список
+demo.txt:
+Строка 1
+Незакоммиченное изменение
+```
+
+Изменение восстановлено, stash пуст.
 
 ## Task 47 — rebase -i
 
-Локальный пример в отдельном учебном репозитории.
+Выполнено в отдельном локальном учебном репозитории. Ветка `feature/squash-demo`.
 
 ### Commands
 
 ```bash
 git switch -c feature/squash-demo
-# Четыре маленьких коммита
+# Четыре коммита, изменяющие demo.txt
 git rebase -i HEAD~4
 # Второй, третий и четвёртый pick заменены на squash
 git log --oneline
 ```
 
-### Before
+### Before (git log --oneline)
 
 ```text
-9e6e429 docs: task 47 - step 4
-24dbfd8 docs: task 47 - step 3
-a32cd4d docs: task 47 - step 2
-89eca25 docs: task 47 - step 1
+a583d24 docs: task 47 - step 4
+3702ab1 docs: task 47 - step 3
+596a36b docs: task 47 - step 2
+44340d0 docs: task 47 - step 1
+80c013a chore: prepare git practice
 ```
 
-### After
+### After (git log --oneline)
 
 ```text
-2ab3346 docs: task 47 - step 1
-6500b71 chore: prepare git practice
+bff8014 docs: task 47 - step 1
+80c013a chore: prepare git practice
 ```
 
-В GitHub ветка `feature/squash-demo` тоже содержит один итоговый коммит `dfd5f72` вместо четырёх исходных коммитов.
+Четыре коммита объединены в один. В GitHub есть отдельная ветка `feature/squash-demo` с итоговым коммитом `dfd5f72`.
 
 ## Task 48 — git tags
 
-В локальном учебном репозитории выполнено:
+Аннотированный тег создан и проверен только в отдельном локальном учебном репозитории.
+
+### Commands
 
 ```bash
 git tag -a v1.0.0 -m "Release v1.0.0"
@@ -188,15 +191,18 @@ git tag
 git show v1.0.0
 ```
 
-### Output
+### Output (локальный пример)
 
 ```text
 v1.0.0
 tag v1.0.0
+Tagger: Practicum Student <student@localhost>
+
 Release v1.0.0
+commit fa1604c4d25069f236bd40451be3d797cf2e1057
 ```
 
-На GitHub тег ещё не опубликован. Для завершения задания в основном репозитории нужно выполнить:
+**В основном GitHub-репозитории тег v1.0.0 пока отсутствует.** Для завершения задания в нём нужно выполнить:
 
 ```bash
 git switch main
@@ -207,18 +213,20 @@ git tag
 git show v1.0.0
 ```
 
+После публикации сюда нужно сохранить вывод `git tag` и `git show v1.0.0` из основного репозитория.
+
 ## Task 49 — git reflog
 
-Выполнено в отдельном локальном учебном Git-репозитории.
+Выполнено в отдельном локальном учебном репозитории.
 
 ### Commands
 
 ```bash
-git add Program.cs
+git add demo.txt
 git commit -m "feat: task 49 - restore a commit"
 git reset --hard HEAD~1
 git reflog
-git reset --hard 53ff84aef9d0df09189328993bc1ac5b24d43442
+git reset --hard 09ab43e637f946392187201d5e85d94110c1c787
 git reflog
 git log --oneline
 ```
@@ -226,39 +234,40 @@ git log --oneline
 ### Output (git reflog после удаления)
 
 ```text
-202226d HEAD@{0}: reset: moving to HEAD~1
-53ff84a HEAD@{1}: commit: feat: task 49 - restore a commit
-202226d HEAD@{2}: commit (initial): chore: create git practice
+e17d57e HEAD@{0}: reset: moving to HEAD~1
+09ab43e HEAD@{1}: commit: feat: task 49 - restore a commit
+e17d57e HEAD@{2}: commit (initial): chore: task 49 - initial
 ```
 
 ### Output (git reflog после восстановления)
 
 ```text
-53ff84a HEAD@{0}: reset: moving to 53ff84aef9d0df09189328993bc1ac5b24d43442
-202226d HEAD@{1}: reset: moving to HEAD~1
-53ff84a HEAD@{2}: commit: feat: task 49 - restore a commit
+09ab43e HEAD@{0}: reset: moving to 09ab43e637f946392187201d5e85d94110c1c787
+e17d57e HEAD@{1}: reset: moving to HEAD~1
+09ab43e HEAD@{2}: commit: feat: task 49 - restore a commit
 ```
 
 ### Output (git log --oneline)
 
 ```text
-53ff84a feat: task 49 - restore a commit
-202226d chore: create git practice
+09ab43e feat: task 49 - restore a commit
+e17d57e chore: task 49 - initial
 ```
 
-Коммит `53ff84a` найден и восстановлен.
+Коммит `09ab43e` успешно восстановлен.
 
 ## Task 50 — git bisect
 
-Выполнено в отдельном локальном учебном Git-репозитории. Создано 14 коммитов, в том числе 12 последовательных шагов. На шестом шаге в `Program.cs` намеренно заменено `return number + 1;` на `return number - 1;`.
+Выполнено в отдельном локальном учебном Git-репозитории: 13 коммитов (начальный и 12 шагов).
+На шаге 6 выражение `return number + 1;` заменено на `return number - 1;`.
 
 ### Commands
 
 ```bash
 git bisect start
-git bisect bad 6e217e93191b67617526026f56be81be61b4801b
-git bisect good 974d0de62fc22520455cd631b0ddab06f5b9e8b4
-# Проверка функции на каждом найденном коммите
+git bisect bad 1cff951
+git bisect good 5897a8a
+# На каждом выбранном коммите проверена функция:
 git bisect bad
 git bisect good
 git bisect good
@@ -271,28 +280,30 @@ git log --oneline
 
 ```text
 Bisecting: 5 revisions left to test after this (roughly 3 steps)
-[3ede775970379e3e536f818f3d2adf06875ba9c4] feat: task 50 - step 6
-Check 1: 3ede775970 : bad
-Bisecting: 2 revisions left to test after this (roughly 1 step)
-[e05d885036ab810ad4d0fc9b169bf6ac30b97487] feat: task 50 - step 3
-Check 2: e05d885036 : good
+[e9de375c340a9b324a89653d4935e22c5b2d1637] feat: task 50 - step 6
+Check 1: e9de375 BAD
+Bisecting: 2 revisions left to test after this (roughly 2 steps)
+[60b52cdd24c3fab753592b29f9d57a4a0beca758] feat: task 50 - step 3
+Check 2: 60b52cd GOOD
 Bisecting: 0 revisions left to test after this (roughly 1 step)
-[571fe5bd1fab1ee553236a1d732b135b3b056581] feat: task 50 - step 5
-Check 3: 571fe5bd1f : good
-3ede775970379e3e536f818f3d2adf06875ba9c4 is the first bad commit
+[389a44a4f7807d369cb8c8d40a95913477d75227] feat: task 50 - step 5
+Check 3: 389a44a GOOD
+e9de375c340a9b324a89653d4935e22c5b2d1637 is the first bad commit
 ```
 
 ### Output (git bisect reset и git log --oneline)
 
 ```text
 Switched to branch 'main'
-6e217e9 feat: task 50 - step 12
-6e79c19 feat: task 50 - step 11
-b2b2966 feat: task 50 - step 10
-cfdadb8 feat: task 50 - step 9
-fefa5c9 feat: task 50 - step 8
-ed9b6e5 feat: task 50 - step 7
-3ede775 feat: task 50 - step 6
+1cff951 feat: task 50 - step 12
+8c3cf8f feat: task 50 - step 11
+abe23bd feat: task 50 - step 10
+7cff13d feat: task 50 - step 9
+dd6256f feat: task 50 - step 8
+c36ddbe feat: task 50 - step 7
+e9de375 feat: task 50 - step 6
+389a44a feat: task 50 - step 5
 ```
 
-Найден первый ошибочный коммит `3ede775`. После `git bisect reset` восстановлена исходная ветка.
+Первый ошибочный коммит — `e9de375`. Исходная ветка восстановлена.
+
