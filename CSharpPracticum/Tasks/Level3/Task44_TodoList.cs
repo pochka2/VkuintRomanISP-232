@@ -103,6 +103,7 @@ public class Task44_TodoList : ITask
         private readonly string path;
         private readonly List<TaskItem> tasks;
 
+        /// <summary>Загружает задачи из файла.</summary>
         public TaskRepository(string path)
         {
             this.path = path;
@@ -111,8 +112,10 @@ public class Task44_TodoList : ITask
                 : new List<TaskItem>();
         }
 
+        /// <summary>Возвращает список задач.</summary>
         public List<TaskItem> GetAll() => tasks;
 
+        /// <summary>Добавляет задачу и сохраняет её.</summary>
         public void Add(string title)
         {
             int id = tasks.Count == 0 ? 1 : tasks.Max(t => t.Id) + 1;
@@ -120,6 +123,7 @@ public class Task44_TodoList : ITask
             Save();
         }
 
+        /// <summary>Отмечает задачу выполненной.</summary>
         public bool Complete(int id)
         {
             TaskItem task = tasks.Find(t => t.Id == id);
@@ -129,6 +133,7 @@ public class Task44_TodoList : ITask
             return true;
         }
 
+        /// <summary>Удаляет задачу по номеру.</summary>
         public bool Remove(int id)
         {
             TaskItem task = tasks.Find(t => t.Id == id);
@@ -148,13 +153,16 @@ public class Task44_TodoList : ITask
     {
         private readonly TaskRepository repository;
 
+        /// <summary>Создаёт сервис задач.</summary>
         public TaskService(TaskRepository repository)
         {
             this.repository = repository;
         }
 
+        /// <summary>Возвращает все задачи.</summary>
         public List<TaskItem> GetAll() => repository.GetAll();
 
+        /// <summary>Проверяет название и добавляет задачу.</summary>
         public void Add(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
@@ -162,7 +170,9 @@ public class Task44_TodoList : ITask
             repository.Add(title.Trim());
         }
 
+        /// <summary>Отмечает задачу выполненной.</summary>
         public bool Complete(int id) => repository.Complete(id);
+        /// <summary>Удаляет задачу.</summary>
         public bool Remove(int id) => repository.Remove(id);
     }
 }
