@@ -193,8 +193,6 @@ git show v1.0.0
 ```text
 v1.0.0
 tag v1.0.0
-Tagger: Student <student@example.com>
-
 Release v1.0.0
 ```
 
