@@ -206,3 +206,93 @@ git push origin v1.0.0
 git tag
 git show v1.0.0
 ```
+
+## Task 49 — git reflog
+
+Выполнено в отдельном локальном учебном Git-репозитории.
+
+### Commands
+
+```bash
+git add Program.cs
+git commit -m "feat: task 49 - restore a commit"
+git reset --hard HEAD~1
+git reflog
+git reset --hard 53ff84aef9d0df09189328993bc1ac5b24d43442
+git reflog
+git log --oneline
+```
+
+### Output (git reflog после удаления)
+
+```text
+202226d HEAD@{0}: reset: moving to HEAD~1
+53ff84a HEAD@{1}: commit: feat: task 49 - restore a commit
+202226d HEAD@{2}: commit (initial): chore: create git practice
+```
+
+### Output (git reflog после восстановления)
+
+```text
+53ff84a HEAD@{0}: reset: moving to 53ff84aef9d0df09189328993bc1ac5b24d43442
+202226d HEAD@{1}: reset: moving to HEAD~1
+53ff84a HEAD@{2}: commit: feat: task 49 - restore a commit
+```
+
+### Output (git log --oneline)
+
+```text
+53ff84a feat: task 49 - restore a commit
+202226d chore: create git practice
+```
+
+Коммит `53ff84a` найден и восстановлен.
+
+## Task 50 — git bisect
+
+Выполнено в отдельном локальном учебном Git-репозитории. Создано 14 коммитов, в том числе 12 последовательных шагов. На шестом шаге в `Program.cs` намеренно заменено `return number + 1;` на `return number - 1;`.
+
+### Commands
+
+```bash
+git bisect start
+git bisect bad 6e217e93191b67617526026f56be81be61b4801b
+git bisect good 974d0de62fc22520455cd631b0ddab06f5b9e8b4
+# Проверка функции на каждом найденном коммите
+git bisect bad
+git bisect good
+git bisect good
+git bisect log
+git bisect reset
+git log --oneline
+```
+
+### Output (git bisect)
+
+```text
+Bisecting: 5 revisions left to test after this (roughly 3 steps)
+[3ede775970379e3e536f818f3d2adf06875ba9c4] feat: task 50 - step 6
+Check 1: 3ede775970 : bad
+Bisecting: 2 revisions left to test after this (roughly 1 step)
+[e05d885036ab810ad4d0fc9b169bf6ac30b97487] feat: task 50 - step 3
+Check 2: e05d885036 : good
+Bisecting: 0 revisions left to test after this (roughly 1 step)
+[571fe5bd1fab1ee553236a1d732b135b3b056581] feat: task 50 - step 5
+Check 3: 571fe5bd1f : good
+3ede775970379e3e536f818f3d2adf06875ba9c4 is the first bad commit
+```
+
+### Output (git bisect reset и git log --oneline)
+
+```text
+Switched to branch 'main'
+6e217e9 feat: task 50 - step 12
+6e79c19 feat: task 50 - step 11
+b2b2966 feat: task 50 - step 10
+cfdadb8 feat: task 50 - step 9
+fefa5c9 feat: task 50 - step 8
+ed9b6e5 feat: task 50 - step 7
+3ede775 feat: task 50 - step 6
+```
+
+Найден первый ошибочный коммит `3ede775`. После `git bisect reset` восстановлена исходная ветка.
