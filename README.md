@@ -70,3 +70,7 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 
 Ветки и команды для заданий 15 и 35 записаны в `git-notes.md`.
 
+Шаг 1 для rebase
+Шаг 2 для rebase
+Шаг 3 для rebase
+Шаг 4 для rebase
