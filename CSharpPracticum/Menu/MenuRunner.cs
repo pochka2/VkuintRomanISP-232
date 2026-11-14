@@ -9,7 +9,7 @@ namespace CSharpPracticum.Menu;
 public static class MenuRunner
 {
     /// <summary>Запускает программу.</summary>
-    public static void Start()
+    public static async Task StartAsync()
     {
         var first = new SortedDictionary<int, ITask>
         {
@@ -83,9 +83,9 @@ public static class MenuRunner
             if (input == null) return;
             if (input == "4" || input == "0" || input == "q")
                 return;
-            if (input == "1") LevelMenu.Show(1, first);
-            else if (input == "2") LevelMenu.Show(2, second);
-            else if (input == "3") LevelMenu.Show(3, third);
+            if (input == "1") await LevelMenu.ShowAsync(1, first);
+            else if (input == "2") await LevelMenu.ShowAsync(2, second);
+            else if (input == "3") await LevelMenu.ShowAsync(3, third);
             else
             {
                 Console.WriteLine("Неверный пункт меню.");
