@@ -174,3 +174,41 @@ ORDER BY DepartmentId ASC, Salary DESC;
 ### Вывод
 
 `TOP` ограничивает количество строк, `ORDER BY` задаёт сортировку. При нескольких столбцах сортировка идёт по порядку их перечисления.
+
+## Task 05 — Агрегация: COUNT, SUM, AVG, MIN, MAX
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Количество, сумма, средняя, минимум и максимум.
+SELECT
+    COUNT(*) AS EmployeesCount,
+    SUM(Salary) AS TotalSalary,
+    ROUND(AVG(Salary), 2) AS AverageSalary,
+    MIN(Salary) AS MinSalary,
+    MAX(Salary) AS MaxSalary
+FROM Employees;
+
+-- Сколько сотрудников получают больше 50000.
+SELECT COUNT(*) AS SalaryAbove50000
+FROM Employees
+WHERE Salary > 50000;
+```
+
+### Результат
+
+| Показатель | Значение |
+| --- | ---: |
+| Всего сотрудников | 10 |
+| Сумма зарплат | 589000.00 |
+| Средняя зарплата | 58900.00 |
+| Минимальная зарплата | 43000.00 |
+| Максимальная зарплата | 90000.00 |
+| Зарплата выше 50000 | 7 |
+
+### Вывод
+
+`COUNT` считает записи, `SUM` складывает значения, `AVG` находит среднее, `MIN` и `MAX` — границы. `ROUND` округляет среднюю зарплату до двух знаков.
