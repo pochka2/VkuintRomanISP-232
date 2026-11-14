@@ -69,9 +69,6 @@ public class LibraryTests
     {
         var library = new Task45_Library.Library();
         var reader = new Task45_Library.Reader("Иван");
-        for (int i = 1; i <= 4; i++)
-            library.AddBook(new Task45_Library.Book("Книга " + i, "Автор"));
-
         var books = new List<Task45_Library.Book>
         {
             new Task45_Library.Book("Первая", "Автор"),
