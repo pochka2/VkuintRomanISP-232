@@ -118,3 +118,91 @@ Conventional Commits показывают назначение изменени�
 ### Проверка .gitignore
 
 Есть `bin/`, `obj/`, `.vs/`, `.idea/`, `*.user`, `*.suo`.
+
+## Task 46 — git stash
+
+Локальный учебный пример.
+
+### Commands
+
+```bash
+git switch main
+# Изменена строка в demo.txt без коммита
+git stash push -m "task 46: demo"
+git stash list
+git switch level-3
+git switch main
+git stash pop
+git stash list
+```
+
+### Output
+
+До `stash pop`:
+
+```text
+stash@{0}: On main: task 46: demo
+```
+
+После `stash pop`: список пуст. Строка «Незакоммиченное изменение» восстановлена в `demo.txt`.
+
+## Task 47 — rebase -i
+
+Локальный пример в отдельном учебном репозитории.
+
+### Commands
+
+```bash
+git switch -c feature/squash-demo
+# Четыре маленьких коммита
+git rebase -i HEAD~4
+# Второй, третий и четвёртый pick заменены на squash
+git log --oneline
+```
+
+### Before
+
+```text
+9e6e429 docs: task 47 - step 4
+24dbfd8 docs: task 47 - step 3
+a32cd4d docs: task 47 - step 2
+89eca25 docs: task 47 - step 1
+```
+
+### After
+
+```text
+2ab3346 docs: task 47 - step 1
+6500b71 chore: prepare git practice
+```
+
+В GitHub ветка `feature/squash-demo` тоже содержит один итоговый коммит `dfd5f72` вместо четырёх исходных коммитов.
+
+## Task 48 — git tags
+
+В локальном учебном репозитории выполнено:
+
+```bash
+git tag -a v1.0.0 -m "Release v1.0.0"
+git tag
+git show v1.0.0
+```
+
+### Output
+
+```text
+v1.0.0
+tag v1.0.0
+Release v1.0.0
+```
+
+На GitHub тег ещё не опубликован. Для завершения задания в основном репозитории нужно выполнить:
+
+```bash
+git switch main
+git pull
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+git tag
+git show v1.0.0
+```
