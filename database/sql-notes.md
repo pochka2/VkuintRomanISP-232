@@ -37,3 +37,34 @@ ORDER BY name;
 
 Созданы четыре таблицы. В `Employees` есть ссылка на отдел и ссылка на руководителя из той же таблицы. `EmployeeProjects` связывает сотрудников с проектами.
 
+## Task 02 — INSERT: заполнение данными
+
+### SQL
+
+Вставка тестовых данных в четыре таблицы выполнена в `init.sql` через `INSERT INTO ... VALUES`. Проверка количества записей:
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT COUNT(*) AS DepartmentsCount FROM Departments;
+SELECT COUNT(*) AS EmployeesCount FROM Employees;
+SELECT COUNT(*) AS ProjectsCount FROM Projects;
+SELECT COUNT(*) AS EmployeeProjectsCount FROM EmployeeProjects;
+```
+
+### Результат
+
+Ожидаемые значения по данным `init.sql`:
+
+| Таблица | Записей |
+| --- | ---: |
+| Departments | 4 |
+| Employees | 10 |
+| Projects | 5 |
+| EmployeeProjects | 14 |
+
+### Вывод
+
+В таблицах есть отделы, сотрудники, проекты и назначения сотрудников на проекты. Руководители указаны через `ManagerId`.
+
