@@ -212,3 +212,34 @@ WHERE Salary > 50000;
 ### Вывод
 
 `COUNT` считает записи, `SUM` складывает значения, `AVG` находит среднее, `MIN` и `MAX` — границы. `ROUND` округляет среднюю зарплату до двух знаков.
+
+## Task 06 — GROUP BY: статистика по отделам
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    DepartmentId,
+    COUNT(*) AS EmployeesCount,
+    ROUND(AVG(Salary), 2) AS AverageSalary,
+    SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY DepartmentId
+ORDER BY AverageSalary DESC;
+```
+
+### Результат
+
+| DepartmentId | Сотрудников | Средняя зарплата | Сумма |
+| ---: | ---: | ---: | ---: |
+| 4 | 1 | 90000.00 | 90000.00 |
+| 1 | 4 | 60000.00 | 240000.00 |
+| 2 | 3 | 57000.00 | 171000.00 |
+| 3 | 2 | 44000.00 | 88000.00 |
+
+### Вывод
+
+`GROUP BY` собирает сотрудников одного отдела в группу. Для каждой группы считаются количество сотрудников, средняя и общая зарплата.
