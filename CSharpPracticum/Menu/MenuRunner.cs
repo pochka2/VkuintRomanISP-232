@@ -66,7 +66,9 @@ public static class MenuRunner
             [45] = new Task45_Library(),
             [46] = new Task46_Stash(),
             [47] = new Task47_Squash(),
-            [48] = new Task48_Tags()
+            [48] = new Task48_Tags(),
+            [49] = new Task49_Reflog(),
+            [50] = new Task50_Bisect()
         };
         while (true)
         {
@@ -74,7 +76,7 @@ public static class MenuRunner
             Console.WriteLine("=== Практикум по C# ===");
             Console.WriteLine("1. Уровень 1 — Базовый (задания 1–15)");
             Console.WriteLine("2. Уровень 2 — Средний (задания 16–35)");
-            Console.WriteLine("3. Уровень 3 — Продвинутый (задания 36–48)");
+            Console.WriteLine("3. Уровень 3 — Продвинутый (задания 36–50)");
             Console.WriteLine("4. Выход");
             Console.Write("Выберите уровень: ");
             string input = Console.ReadLine()?.Trim().ToLower();

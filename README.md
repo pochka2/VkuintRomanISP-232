@@ -1,6 +1,6 @@
 # Практикум по C#
 
-Консольный практикум, задания 1–48.
+Консольный практикум, задания 1–50.
 
 ## Запуск
 
@@ -62,6 +62,8 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 | 46 | Git: stash | Готово |
 | 47 | Git: rebase -i | Готово |
 | 48 | Git: теги | В работе |
+| 49 | Git: reflog | Готово |
+| 50 | Git: bisect | Готово |
 
 ## Заметки
 
@@ -73,5 +75,5 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 
 ## Git
 
-Ветки и команды для заданий 15, 35 и 46–48 записаны в `git-notes.md`.
+Ветки и команды для заданий 15, 35 и 46–50 записаны в `git-notes.md`.
 
