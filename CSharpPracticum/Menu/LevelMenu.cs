@@ -6,7 +6,7 @@ namespace CSharpPracticum.Menu;
 public static class LevelMenu
 {
     /// <summary>Показывает список заданий и запускает выбранное.</summary>
-    public static void Show(int level, SortedDictionary<int, ITask> tasks)
+    public static async Task ShowAsync(int level, SortedDictionary<int, ITask> tasks)
     {
         while (true)
         {
@@ -39,7 +39,10 @@ public static class LevelMenu
             Console.WriteLine(new string('-', 50));
             try
             {
-                taskToRun.Run();
+                if (taskToRun is IAsyncTask asyncTask)
+                    await asyncTask.RunAsync();
+                else
+                    taskToRun.Run();
             }
             catch (Exception ex)
             {

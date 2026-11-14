@@ -3,7 +3,7 @@ using CSharpPracticum.Common;
 namespace CSharpPracticum.Tasks.Level3;
 
 /// <summary>Задание 40. Async и обработка ошибок.</summary>
-public class Task40_Download : ITask
+public class Task40_Download : IAsyncTask
 {
     /// <summary>Название задания.</summary>
     public string Title => "Async и обработка ошибок";
@@ -27,7 +27,8 @@ public class Task40_Download : ITask
         RunAsync().GetAwaiter().GetResult();
     }
 
-    private static async Task RunAsync()
+    /// <summary>Запускает задание асинхронно.</summary>
+    public async Task RunAsync()
     {
         foreach (string url in new[] { "https://example.com/file", "" })
         {

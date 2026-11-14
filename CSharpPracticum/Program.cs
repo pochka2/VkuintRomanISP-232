@@ -1,3 +1,3 @@
 using CSharpPracticum.Menu;
 
-MenuRunner.Start();
+await MenuRunner.StartAsync();

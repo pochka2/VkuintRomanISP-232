@@ -3,7 +3,7 @@ using CSharpPracticum.Common;
 namespace CSharpPracticum.Tasks.Level3;
 
 /// <summary>Задание 42. Отмена операции.</summary>
-public class Task42_Cancellation : ITask
+public class Task42_Cancellation : IAsyncTask
 {
     /// <summary>Название задания.</summary>
     public string Title => "Отмена операции";
@@ -27,7 +27,8 @@ public class Task42_Cancellation : ITask
         RunAsync().GetAwaiter().GetResult();
     }
 
-    private static async Task RunAsync()
+    /// <summary>Запускает задание асинхронно.</summary>
+    public async Task RunAsync()
     {
         using CancellationTokenSource source = new CancellationTokenSource();
         source.CancelAfter(2000);

@@ -4,7 +4,7 @@ using CSharpPracticum.Common;
 namespace CSharpPracticum.Tasks.Level3;
 
 /// <summary>Задание 41. Task.WhenAll.</summary>
-public class Task41_WhenAll : ITask
+public class Task41_WhenAll : IAsyncTask
 {
     /// <summary>Название задания.</summary>
     public string Title => "Task.WhenAll";
@@ -28,7 +28,8 @@ public class Task41_WhenAll : ITask
         RunAsync().GetAwaiter().GetResult();
     }
 
-    private static async Task RunAsync()
+    /// <summary>Запускает задание асинхронно.</summary>
+    public async Task RunAsync()
     {
         Stopwatch watch = Stopwatch.StartNew();
         List<int> first = new List<int>();
