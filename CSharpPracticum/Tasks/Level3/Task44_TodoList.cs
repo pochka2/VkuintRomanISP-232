@@ -87,7 +87,8 @@ public class Task44_TodoList : ITask
         }
     }
 
-    private class TaskItem
+    /// <summary>Задача для сохранения в JSON.</summary>
+    public class TaskItem
     {
         /// <summary>Номер задачи.</summary>
         public int Id { get; set; }
