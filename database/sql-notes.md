@@ -535,3 +535,46 @@ ORDER BY e.EmployeeId;
 ### Вывод
 
 Скалярные подзапросы в `SELECT` вычисляют среднюю зарплату для отдела каждого сотрудника. Разница положительная, если зарплата выше средней, и отрицательная, если ниже.
+
+## Task 14 — EXISTS и NOT EXISTS
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Сотрудники с хотя бы одним проектом.
+SELECT e.EmployeeId, e.EmployeeName
+FROM Employees e
+WHERE EXISTS (
+    SELECT 1
+    FROM EmployeeProjects ep
+    WHERE ep.EmployeeId = e.EmployeeId
+)
+ORDER BY e.EmployeeId;
+
+-- Сотрудники без проектов.
+SELECT e.EmployeeId, e.EmployeeName
+FROM Employees e
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM EmployeeProjects ep
+    WHERE ep.EmployeeId = e.EmployeeId
+)
+ORDER BY e.EmployeeId;
+```
+
+### Результат
+
+На исходных данных первый запрос возвращает 9 сотрудников: Анна Иванова, Пётр Сидоров, Мария Кузнецова, Иван Петров, Ольга Смирнова, Дмитрий Орлов, Елена Волкова, Сергей Морозов, Алексей Лебедев.
+
+Второй запрос возвращает одного сотрудника:
+
+| EmployeeId | EmployeeName |
+| ---: | --- |
+| 9 | Наталья Соколова |
+
+### Вывод
+
+`EXISTS` проверяет наличие хотя бы одной подходящей записи, `NOT EXISTS` — её отсутствие. Запрос с `NOT EXISTS` даёт ту же выборку, что и `LEFT JOIN` в задании №9.
