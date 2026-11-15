@@ -105,11 +105,14 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 | 20 | Индексы: создание и анализ | Готово |
 | 21 | Хранимые процедуры | Готово |
 | 22 | Скалярная и табличная функции | Готово |
+| 23 | Оконные функции: ROW_NUMBER, RANK, DENSE_RANK | Готово |
+| 24 | Оконные агрегаты: SUM OVER и AVG OVER | Готово |
+| 25 | CTE: WITH | Готово |
 
 ### Как запустить
 
 1. Открой `database/init.sql` в SQL Server Management Studio (SSMS) и выполни весь скрипт.
-2. Открой `database/sql-notes.md` и выполни запросы из заданий 1–22 в SSMS.
+2. Открой `database/sql-notes.md` и выполни запросы из заданий 1–25 в SSMS.
 
 **Внимание:** `init.sql` каждый раз пересоздаёт базу `PracticeDB` и удаляет все старые данные внутри неё.
 
