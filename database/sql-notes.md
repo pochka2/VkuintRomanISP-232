@@ -339,3 +339,30 @@ ORDER BY d.DepartmentName ASC, e.Salary DESC;
 ### Вывод
 
 `INNER JOIN` соединяет сотрудников с отделами по `DepartmentId`. Сначала строки сортируются по названию отдела, затем по зарплате по убыванию.
+
+## Task 09 — LEFT JOIN — сотрудники без проектов
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT e.EmployeeId, e.EmployeeName
+FROM Employees e
+LEFT JOIN EmployeeProjects ep ON e.EmployeeId = ep.EmployeeId
+WHERE ep.EmployeeId IS NULL
+ORDER BY e.EmployeeId;
+```
+
+### Результат
+
+На данных из `init.sql` ожидается одна строка:
+
+| EmployeeId | EmployeeName |
+| ---: | --- |
+| 9 | Наталья Соколова |
+
+### Вывод
+
+`LEFT JOIN` оставляет всех сотрудников, а для отсутствующих назначений на проекты возвращает `NULL`. Условие `IS NULL` находит сотрудников без проектов.
