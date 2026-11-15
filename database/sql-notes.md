@@ -1105,3 +1105,79 @@ GO
 ### Вывод
 
 Хранимая процедура выполняет сохранённый запрос и принимает параметры. Параметр `OUTPUT` позволяет вернуть вычисленное значение после выполнения процедуры.
+
+## Task 22 — Скалярная и табличная функции
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Скалярная функция: зарплата за 12 месяцев.
+CREATE OR ALTER FUNCTION dbo.fn_GetAnnualSalary
+(
+    @MonthlySalary DECIMAL(10,2)
+)
+RETURNS DECIMAL(12,2)
+AS
+BEGIN
+    DECLARE @AnnualSalary DECIMAL(12,2);
+    SET @AnnualSalary = @MonthlySalary * 12;
+    RETURN @AnnualSalary;
+END;
+GO
+
+-- Табличная функция: сотрудники с зарплатой в заданном диапазоне.
+CREATE OR ALTER FUNCTION dbo.fn_GetEmployeesBySalaryRange
+(
+    @Min DECIMAL(10,2),
+    @Max DECIMAL(10,2)
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT EmployeeId, EmployeeName, Salary
+    FROM Employees
+    WHERE Salary BETWEEN @Min AND @Max
+);
+GO
+
+-- Вызов скалярной функции в SELECT.
+SELECT dbo.fn_GetAnnualSalary(65000) AS AnnualSalary;
+GO
+
+-- Вызов табличной функции в FROM.
+SELECT EmployeeId, EmployeeName, Salary
+FROM dbo.fn_GetEmployeesBySalaryRange(40000, 60000)
+ORDER BY EmployeeId;
+GO
+
+-- Проверка пустого диапазона.
+SELECT EmployeeId, EmployeeName, Salary
+FROM dbo.fn_GetEmployeesBySalaryRange(100000, 200000)
+ORDER BY EmployeeId;
+GO
+```
+
+### Результат
+
+Скалярная функция для зарплаты `65000` возвращает годовую зарплату `780000.00`.
+
+Табличная функция с диапазоном `40000–60000` возвращает шесть сотрудников:
+
+| EmployeeId | EmployeeName | Salary |
+| ---: | --- | ---: |
+| 3 | Мария Кузнецова | 55000.00 |
+| 4 | Иван Петров | 48000.00 |
+| 6 | Дмитрий Орлов | 58000.00 |
+| 7 | Елена Волкова | 52000.00 |
+| 8 | Сергей Морозов | 45000.00 |
+| 9 | Наталья Соколова | 43000.00 |
+
+В диапазоне `100000–200000` сотрудников нет, поэтому результат — пустая таблица.
+
+### Вывод
+
+Скалярная функция возвращает одно значение и вызывается в `SELECT`. Табличная возвращает набор строк и вызывается в `FROM`.
