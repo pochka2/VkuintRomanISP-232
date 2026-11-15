@@ -366,3 +366,48 @@ ORDER BY e.EmployeeId;
 ### Вывод
 
 `LEFT JOIN` оставляет всех сотрудников, а для отсутствующих назначений на проекты возвращает `NULL`. Условие `IS NULL` находит сотрудников без проектов.
+
+## Task 10 — Множественный JOIN — сотрудники, отделы и проекты
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    e.EmployeeName,
+    d.DepartmentName,
+    p.ProjectName,
+    ep.Hours
+FROM Employees e
+INNER JOIN Departments d ON e.DepartmentId = d.DepartmentId
+INNER JOIN EmployeeProjects ep ON e.EmployeeId = ep.EmployeeId
+INNER JOIN Projects p ON ep.ProjectId = p.ProjectId
+ORDER BY d.DepartmentName, e.EmployeeName, p.ProjectName;
+```
+
+### Результат
+
+На тестовых данных ожидаются 14 назначений:
+
+| EmployeeName | DepartmentName | ProjectName | Hours |
+| --- | --- | --- | ---: |
+| Дмитрий Орлов | Аналитика | AI Assistant | 50 |
+| Дмитрий Орлов | Аналитика | Data Warehouse | 70 |
+| Елена Волкова | Аналитика | Mobile App | 95 |
+| Ольга Смирнова | Аналитика | Data Warehouse | 110 |
+| Алексей Лебедев | Менеджмент | AI Assistant | 200 |
+| Алексей Лебедев | Менеджмент | CRM System | 30 |
+| Анна Иванова | Разработка | CRM System | 120 |
+| Анна Иванова | Разработка | Data Warehouse | 80 |
+| Иван Петров | Разработка | Legacy Refactor | 40 |
+| Иван Петров | Разработка | Mobile App | 90 |
+| Мария Кузнецова | Разработка | Mobile App | 100 |
+| Пётр Сидоров | Разработка | AI Assistant | 60 |
+| Пётр Сидоров | Разработка | CRM System | 150 |
+| Сергей Морозов | Тестирование | Legacy Refactor | 130 |
+
+### Вывод
+
+Через `INNER JOIN` соединены все четыре таблицы. Для каждого назначения выводятся сотрудник, отдел, проект и часы; `ORDER BY` задаёт порядок по трём полям.
