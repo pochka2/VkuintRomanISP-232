@@ -722,3 +722,93 @@ ORDER BY EmployeeId;
 ### Вывод
 
 `UPDATE` изменяет только строки, указанные в `WHERE`. `SELECT` до и после помогает проверить результат. `ROLLBACK` сохраняет исходные тестовые данные.
+
+## Task 17 — DELETE: удаление данных
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Пробуем удалить записи, не сохраняя изменения в учебной базе.
+BEGIN TRANSACTION;
+
+-- 1. Удалить назначения с нулевым количеством часов (если есть).
+SELECT COUNT(*) AS AssignmentsBefore
+FROM EmployeeProjects;
+SELECT COUNT(*) AS ZeroHoursBefore
+FROM EmployeeProjects
+WHERE Hours = 0;
+
+DELETE FROM EmployeeProjects
+WHERE Hours = 0;
+
+SELECT COUNT(*) AS AssignmentsAfter
+FROM EmployeeProjects;
+
+-- 2. Удалить сотрудника №8, предварительно удалив его назначения.
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE EmployeeId = 8;
+SELECT COUNT(*) AS EmployeeAssignmentsBefore
+FROM EmployeeProjects
+WHERE EmployeeId = 8;
+
+DELETE FROM EmployeeProjects
+WHERE EmployeeId = 8;
+
+SELECT COUNT(*) AS AssignmentsAfterEmployeeCleanup
+FROM EmployeeProjects;
+
+SELECT COUNT(*) AS EmployeesBefore
+FROM Employees;
+
+DELETE FROM Employees
+WHERE EmployeeId = 8;
+
+SELECT COUNT(*) AS EmployeesAfter
+FROM Employees;
+
+-- 3. DELETE без WHERE только на тестовой копии.
+SELECT EmployeeId, EmployeeName
+INTO #EmployeesCopy
+FROM Employees;
+
+SELECT COUNT(*) AS CopyBefore
+FROM #EmployeesCopy;
+
+DELETE FROM #EmployeesCopy;
+
+SELECT COUNT(*) AS CopyAfter
+FROM #EmployeesCopy;
+
+DROP TABLE #EmployeesCopy;
+
+-- Отменяем удаления из основных таблиц.
+ROLLBACK TRANSACTION;
+
+SELECT COUNT(*) AS EmployeesRestored
+FROM Employees;
+SELECT COUNT(*) AS AssignmentsRestored
+FROM EmployeeProjects;
+```
+
+### Результат
+
+На данных `init.sql` ожидаются следующие количества:
+
+| Действие | До | После |
+| --- | ---: | ---: |
+| Удаление назначений с `Hours = 0` | 14 | 14 |
+| Удаление назначений сотрудника №8 | 14 | 13 |
+| Удаление сотрудника №8 | 10 | 9 |
+| `DELETE` без `WHERE` на копии | 9 | 0 |
+| После `ROLLBACK`: сотрудники | 10 | 10 |
+| После `ROLLBACK`: назначения | 14 | 14 |
+
+В исходных данных нет назначений с нулевыми часами, поэтому первое удаление не затрагивает строки. У Сергея Морозова (`EmployeeId = 8`) есть одно назначение на проект и нет подчинённых, поэтому его можно удалить после удаления назначения.
+
+### Вывод
+
+`DELETE ... WHERE` удаляет только подходящие строки, а без `WHERE` — все строки в таблице. Перед удалением сотрудника нужно учитывать внешние ключи. `ROLLBACK` отменяет изменения после демонстрации.
