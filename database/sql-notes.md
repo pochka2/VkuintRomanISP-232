@@ -1181,3 +1181,192 @@ GO
 ### Вывод
 
 Скалярная функция возвращает одно значение и вызывается в `SELECT`. Табличная возвращает набор строк и вызывается в `FROM`.
+
+## Task 23 — Оконные функции: ROW_NUMBER, RANK, DENSE_RANK
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    EmployeeName,
+    DepartmentId,
+    Salary,
+    ROW_NUMBER() OVER (ORDER BY Salary DESC, EmployeeId) AS RowNum,
+    RANK() OVER (PARTITION BY DepartmentId ORDER BY Salary DESC) AS SalaryRank,
+    DENSE_RANK() OVER (PARTITION BY DepartmentId ORDER BY Salary DESC) AS DenseSalaryRank
+FROM Employees
+ORDER BY DepartmentId, Salary DESC, EmployeeId;
+
+-- Пример с одинаковыми зарплатами (основную таблицу не меняем).
+;WITH Example AS
+(
+    SELECT
+        EmployeeName,
+        DepartmentId,
+        CASE WHEN EmployeeId = 1 THEN CAST(72000 AS DECIMAL(10,2))
+             ELSE Salary END AS Salary
+    FROM Employees
+    WHERE DepartmentId = 1
+)
+SELECT
+    EmployeeName,
+    DepartmentId,
+    Salary,
+    RANK() OVER (PARTITION BY DepartmentId ORDER BY Salary DESC) AS SalaryRank,
+    DENSE_RANK() OVER (PARTITION BY DepartmentId ORDER BY Salary DESC) AS DenseSalaryRank
+FROM Example
+ORDER BY Salary DESC, EmployeeName;
+```
+
+### Результат
+
+На исходных данных из `init.sql`:
+
+| EmployeeName | DepartmentId | Salary | RowNum | SalaryRank | DenseSalaryRank |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Пётр Сидоров | 1 | 72000.00 | 2 | 1 | 1 |
+| Анна Иванова | 1 | 65000.00 | 3 | 2 | 2 |
+| Мария Кузнецова | 1 | 55000.00 | 6 | 3 | 3 |
+| Иван Петров | 1 | 48000.00 | 8 | 4 | 4 |
+| Ольга Смирнова | 2 | 61000.00 | 4 | 1 | 1 |
+| Дмитрий Орлов | 2 | 58000.00 | 5 | 2 | 2 |
+| Елена Волкова | 2 | 52000.00 | 7 | 3 | 3 |
+| Сергей Морозов | 3 | 45000.00 | 9 | 1 | 1 |
+| Наталья Соколова | 3 | 43000.00 | 10 | 2 | 2 |
+| Алексей Лебедев | 4 | 90000.00 | 1 | 1 | 1 |
+
+В исходных данных нет одинаковых зарплат внутри одного отдела. Во втором запросе только для примера зарплата Анны становится 72000.00, как у Петра. Ожидаемые ранги:
+
+| EmployeeName | Salary | SalaryRank | DenseSalaryRank |
+| --- | ---: | ---: | ---: |
+| Анна Иванова | 72000.00 | 1 | 1 |
+| Пётр Сидоров | 72000.00 | 1 | 1 |
+| Мария Кузнецова | 55000.00 | 3 | 2 |
+| Иван Петров | 48000.00 | 4 | 3 |
+
+### Вывод
+
+`ROW_NUMBER` нумерует строки, `RANK` пропускает номер после одинаковых значений, а `DENSE_RANK` не пропускает. `PARTITION BY` считает ранги отдельно для каждого отдела.
+
+## Task 24 — Оконные агрегаты: SUM OVER, AVG OVER
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    EmployeeName,
+    DepartmentId,
+    Salary,
+    SUM(Salary) OVER (PARTITION BY DepartmentId) AS DepartmentTotal,
+    CAST(AVG(Salary) OVER (PARTITION BY DepartmentId) AS DECIMAL(10,2)) AS DepartmentAverage,
+    CAST(Salary - AVG(Salary) OVER (PARTITION BY DepartmentId) AS DECIMAL(10,2)) AS SalaryDifference
+FROM Employees
+ORDER BY DepartmentId, EmployeeId;
+
+-- Проверка через GROUP BY.
+SELECT
+    DepartmentId,
+    SUM(Salary) AS DepartmentTotal,
+    CAST(AVG(Salary) AS DECIMAL(10,2)) AS DepartmentAverage
+FROM Employees
+GROUP BY DepartmentId
+ORDER BY DepartmentId;
+```
+
+### Результат
+
+Ожидаемые значения на исходных данных:
+
+| EmployeeName | DepartmentId | Salary | DepartmentTotal | DepartmentAverage | SalaryDifference |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Анна Иванова | 1 | 65000.00 | 240000.00 | 60000.00 | 5000.00 |
+| Пётр Сидоров | 1 | 72000.00 | 240000.00 | 60000.00 | 12000.00 |
+| Мария Кузнецова | 1 | 55000.00 | 240000.00 | 60000.00 | -5000.00 |
+| Иван Петров | 1 | 48000.00 | 240000.00 | 60000.00 | -12000.00 |
+| Ольга Смирнова | 2 | 61000.00 | 171000.00 | 57000.00 | 4000.00 |
+| Дмитрий Орлов | 2 | 58000.00 | 171000.00 | 57000.00 | 1000.00 |
+| Елена Волкова | 2 | 52000.00 | 171000.00 | 57000.00 | -5000.00 |
+| Сергей Морозов | 3 | 45000.00 | 88000.00 | 44000.00 | 1000.00 |
+| Наталья Соколова | 3 | 43000.00 | 88000.00 | 44000.00 | -1000.00 |
+| Алексей Лебедев | 4 | 90000.00 | 90000.00 | 90000.00 | 0.00 |
+
+Проверка через `GROUP BY`:
+
+| DepartmentId | DepartmentTotal | DepartmentAverage |
+| ---: | ---: | ---: |
+| 1 | 240000.00 | 60000.00 |
+| 2 | 171000.00 | 57000.00 |
+| 3 | 88000.00 | 44000.00 |
+| 4 | 90000.00 | 90000.00 |
+
+### Вывод
+
+`SUM OVER` и `AVG OVER` считают сумму и среднюю по отделу, но оставляют строки всех сотрудников. `SalaryDifference` показывает отклонение зарплаты от средней.
+
+## Task 25 — CTE (WITH)
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Запрос из задания 12: сотрудники с зарплатой выше средней.
+;WITH AvgSalary AS
+(
+    SELECT AVG(Salary) AS AverageSalary
+    FROM Employees
+)
+SELECT e.EmployeeName, e.Salary
+FROM Employees e
+CROSS JOIN AvgSalary a
+WHERE e.Salary > a.AverageSalary
+ORDER BY e.Salary DESC;
+
+-- Три отдела с самой высокой средней зарплатой.
+;WITH TopDepartments AS
+(
+    SELECT TOP 3
+        DepartmentId,
+        AVG(Salary) AS AverageSalary
+    FROM Employees
+    GROUP BY DepartmentId
+    ORDER BY AVG(Salary) DESC, DepartmentId
+)
+SELECT
+    d.DepartmentId,
+    d.DepartmentName,
+    CAST(t.AverageSalary AS DECIMAL(10,2)) AS AverageSalary
+FROM TopDepartments t
+INNER JOIN Departments d ON t.DepartmentId = d.DepartmentId
+ORDER BY t.AverageSalary DESC, d.DepartmentId;
+```
+
+### Результат
+
+Средняя зарплата всех сотрудников — 58900.00. Первый запрос, как и задание 12, возвращает:
+
+| EmployeeName | Salary |
+| --- | ---: |
+| Алексей Лебедев | 90000.00 |
+| Пётр Сидоров | 72000.00 |
+| Анна Иванова | 65000.00 |
+| Ольга Смирнова | 61000.00 |
+
+Топ-3 отделов по средней зарплате:
+
+| DepartmentId | DepartmentName | AverageSalary |
+| ---: | --- | ---: |
+| 4 | Менеджмент | 90000.00 |
+| 1 | Разработка | 60000.00 |
+| 2 | Аналитика | 57000.00 |
+
+### Вывод
+
+В задании 12 средняя зарплата считалась подзапросом прямо в `WHERE`. С `WITH AvgSalary` вычисление вынесено отдельно, поэтому условие проще читать. Результат одинаковый.
