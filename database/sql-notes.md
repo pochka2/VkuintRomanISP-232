@@ -1033,3 +1033,75 @@ ORDER BY name;
 ### Вывод
 
 Индекс помогает находить записи по столбцу, но на очень маленькой таблице может не использоваться. `SHOWPLAN_TEXT` показывает выбранный план, а `STATISTICS IO` — число логических чтений.
+
+## Task 21 — Хранимые процедуры
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Первая процедура: сотрудники выбранного отдела.
+CREATE OR ALTER PROCEDURE dbo.sp_GetEmployeesByDepartment
+    @DeptId INT
+AS
+BEGIN
+    SELECT EmployeeId, EmployeeName, Salary
+    FROM Employees
+    WHERE DepartmentId = @DeptId
+    ORDER BY EmployeeId;
+END;
+GO
+
+EXEC dbo.sp_GetEmployeesByDepartment @DeptId = 1;
+GO
+
+-- Вторая процедура: средняя зарплата через OUTPUT-параметр.
+CREATE OR ALTER PROCEDURE dbo.sp_GetAverageSalaryByDepartment
+    @DeptId INT,
+    @AvgSalary DECIMAL(10,2) OUTPUT
+AS
+BEGIN
+    SELECT @AvgSalary = AVG(Salary)
+    FROM Employees
+    WHERE DepartmentId = @DeptId;
+END;
+GO
+
+DECLARE @Result DECIMAL(10,2);
+
+EXEC dbo.sp_GetAverageSalaryByDepartment
+    @DeptId = 1,
+    @AvgSalary = @Result OUTPUT;
+
+SELECT @Result AS AverageSalary;
+GO
+
+-- Проверка отдела, в котором нет сотрудников.
+DECLARE @EmptyResult DECIMAL(10,2);
+
+EXEC dbo.sp_GetAverageSalaryByDepartment
+    @DeptId = 99,
+    @AvgSalary = @EmptyResult OUTPUT;
+
+SELECT @EmptyResult AS AverageSalary;
+GO
+```
+
+### Результат
+
+После выполнения `init.sql` первая процедура с `@DeptId = 1` возвращает четырёх сотрудников:
+
+| EmployeeId | EmployeeName | Salary |
+| ---: | --- | ---: |
+| 1 | Анна Иванова | 65000.00 |
+| 2 | Пётр Сидоров | 72000.00 |
+| 3 | Мария Кузнецова | 55000.00 |
+| 4 | Иван Петров | 48000.00 |
+
+Вторая процедура возвращает `AverageSalary = 60000.00`. Для отдела №99 без сотрудников результатом будет `NULL`.
+
+### Вывод
+
+Хранимая процедура выполняет сохранённый запрос и принимает параметры. Параметр `OUTPUT` позволяет вернуть вычисленное значение после выполнения процедуры.
