@@ -641,3 +641,84 @@ ORDER BY EmployeeId;
 ### Вывод
 
 `UNION` убирает повторяющиеся строки, а `UNION ALL` оставляет их. Анна, Пётр, Ольга и Алексей подходят сразу под оба условия, поэтому при `UNION ALL` встречаются два раза.
+
+## Task 16 — UPDATE: изменение данных
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Все изменения выполняются в транзакции.
+BEGIN TRANSACTION;
+
+-- 1. Увеличить зарплаты первого отдела на 10%.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1
+ORDER BY EmployeeId;
+
+UPDATE Employees
+SET Salary = Salary * 1.10
+WHERE DepartmentId = 1;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1
+ORDER BY EmployeeId;
+
+-- 2. Увеличить зарплату на 5000 принятым до 2022 года.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE HireDate < '2022-01-01'
+ORDER BY EmployeeId;
+
+UPDATE Employees
+SET Salary = Salary + 5000
+WHERE HireDate < '2022-01-01';
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE HireDate < '2022-01-01'
+ORDER BY EmployeeId;
+
+-- 3. Изменить дату найма одного сотрудника.
+SELECT EmployeeId, EmployeeName, HireDate
+FROM Employees
+WHERE EmployeeId = 4;
+
+UPDATE Employees
+SET HireDate = '2023-03-10'
+WHERE EmployeeId = 4;
+
+SELECT EmployeeId, EmployeeName, HireDate
+FROM Employees
+WHERE EmployeeId = 4;
+
+-- Возвращаем исходные данные для остальных заданий.
+ROLLBACK TRANSACTION;
+
+SELECT EmployeeId, EmployeeName, Salary, HireDate
+FROM Employees
+WHERE EmployeeId IN (1, 4)
+ORDER BY EmployeeId;
+```
+
+### Результат
+
+Ожидаемые изменения на данных из `init.sql`:
+
+| Действие | До | После |
+| --- | --- | --- |
+| Зарплата Анны, отдел 1 | 65000.00 | 71500.00 |
+| Зарплата Петра, отдел 1 | 72000.00 | 79200.00 |
+| Зарплата Анны после прибавки 5000 | 71500.00 | 76500.00 |
+| Зарплата Ольги после прибавки 5000 | 61000.00 | 66000.00 |
+| Дата найма Ивана | 2023-02-10 | 2023-03-10 |
+
+Первый `UPDATE` изменяет 4 строки, второй — 6 строк, третий — 1 строку. Сотрудники, не подходящие под условия, не изменяются. После `ROLLBACK` данные снова исходные.
+
+### Вывод
+
+`UPDATE` изменяет только строки, указанные в `WHERE`. `SELECT` до и после помогает проверить результат. `ROLLBACK` сохраняет исходные тестовые данные.
