@@ -939,3 +939,97 @@ SELECT OBJECT_ID(N'dbo.vw_EmployeeDetails', N'V') AS ViewAfterDrop;
 ### Вывод
 
 `VIEW` позволяет сохранить запрос к связанным таблицам и обращаться к нему как к таблице. `DROP VIEW` удаляет только представление.
+
+## Task 20 — Индексы: создание и анализ
+
+### SQL
+
+В SSMS включить план выполнения (Ctrl+M), затем запустить запросы ниже.
+`SET STATISTICS IO ON` покажет `logical reads` на вкладке «Сообщения».
+
+```sql
+USE PracticeDB;
+GO
+
+-- Удаляем индексы из предыдущих запусков, чтобы сравнить с исходным состоянием.
+DROP INDEX IF EXISTS IX_Employees_DepartmentId ON Employees;
+DROP INDEX IF EXISTS IX_Employees_Salary ON Employees;
+GO
+
+-- До создания индексов.
+SET STATISTICS IO ON;
+GO
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET STATISTICS IO OFF;
+GO
+
+-- Получить текст плана ДО индексов.
+SET SHOWPLAN_TEXT ON;
+GO
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET SHOWPLAN_TEXT OFF;
+GO
+
+-- Индексы на отдел и зарплату.
+CREATE INDEX IX_Employees_DepartmentId ON Employees(DepartmentId);
+CREATE INDEX IX_Employees_Salary ON Employees(Salary);
+GO
+
+-- После создания индексов: тот же запрос.
+SET STATISTICS IO ON;
+GO
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET STATISTICS IO OFF;
+GO
+
+-- Получить текст плана ПОСЛЕ создания индексов.
+SET SHOWPLAN_TEXT ON;
+GO
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET SHOWPLAN_TEXT OFF;
+GO
+
+-- Проверить, что оба индекса созданы.
+SELECT name
+FROM sys.indexes
+WHERE object_id = OBJECT_ID('dbo.Employees')
+  AND name IN ('IX_Employees_DepartmentId', 'IX_Employees_Salary')
+ORDER BY name;
+```
+
+### Результат
+
+Оба запроса до и после индексов должны вернуть одинаковые строки (если перед запуском выполнен `init.sql`):
+
+| EmployeeId | EmployeeName | Salary |
+| ---: | --- | ---: |
+| 1 | Анна Иванова | 65000.00 |
+| 2 | Пётр Сидоров | 72000.00 |
+| 3 | Мария Кузнецова | 55000.00 |
+
+После `CREATE INDEX` ожидаются два индекса: `IX_Employees_DepartmentId` и `IX_Employees_Salary`.
+
+**Сравнение планов и logical reads (заполнить выводом SSMS):**
+
+| Измерение | До индексов | После индексов |
+| --- | --- | --- |
+| Оператор плана | Вывод `SHOWPLAN_TEXT` | Вывод `SHOWPLAN_TEXT` |
+| `logical reads` | Из сообщений `STATISTICS IO` | Из сообщений `STATISTICS IO` |
+
+На учебной таблице всего 10 сотрудников, поэтому SQL Server может выбрать сканирование таблицы даже после создания индексов. Отличие плана и уменьшение `logical reads` нельзя гарантировать: они зависят от оптимизатора и количества данных. Точные значения нужно перенести из SSMS.
+
+### Вывод
+
+Индекс помогает находить записи по столбцу, но на очень маленькой таблице может не использоваться. `SHOWPLAN_TEXT` показывает выбранный план, а `STATISTICS IO` — число логических чтений.
