@@ -939,3 +939,245 @@ SELECT OBJECT_ID(N'dbo.vw_EmployeeDetails', N'V') AS ViewAfterDrop;
 ### Вывод
 
 `VIEW` позволяет сохранить запрос к связанным таблицам и обращаться к нему как к таблице. `DROP VIEW` удаляет только представление.
+
+## Task 20 — Индексы: создание и анализ
+
+### SQL
+
+В SSMS включить план выполнения (Ctrl+M), затем запустить запросы ниже.
+`SET STATISTICS IO ON` покажет `logical reads` на вкладке «Сообщения».
+
+```sql
+USE PracticeDB;
+GO
+
+-- Удаляем индексы из предыдущих запусков, чтобы сравнить с исходным состоянием.
+DROP INDEX IF EXISTS IX_Employees_DepartmentId ON Employees;
+DROP INDEX IF EXISTS IX_Employees_Salary ON Employees;
+GO
+
+-- До создания индексов.
+SET STATISTICS IO ON;
+GO
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET STATISTICS IO OFF;
+GO
+
+-- Получить текст плана ДО индексов.
+SET SHOWPLAN_TEXT ON;
+GO
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET SHOWPLAN_TEXT OFF;
+GO
+
+-- Индексы на отдел и зарплату.
+CREATE INDEX IX_Employees_DepartmentId ON Employees(DepartmentId);
+CREATE INDEX IX_Employees_Salary ON Employees(Salary);
+GO
+
+-- После создания индексов: тот же запрос.
+SET STATISTICS IO ON;
+GO
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET STATISTICS IO OFF;
+GO
+
+-- Получить текст плана ПОСЛЕ создания индексов.
+SET SHOWPLAN_TEXT ON;
+GO
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET SHOWPLAN_TEXT OFF;
+GO
+
+-- Проверить, что оба индекса созданы.
+SELECT name
+FROM sys.indexes
+WHERE object_id = OBJECT_ID('dbo.Employees')
+  AND name IN ('IX_Employees_DepartmentId', 'IX_Employees_Salary')
+ORDER BY name;
+```
+
+### Результат
+
+Оба запроса до и после индексов должны вернуть одинаковые строки (если перед запуском выполнен `init.sql`):
+
+| EmployeeId | EmployeeName | Salary |
+| ---: | --- | ---: |
+| 1 | Анна Иванова | 65000.00 |
+| 2 | Пётр Сидоров | 72000.00 |
+| 3 | Мария Кузнецова | 55000.00 |
+
+После `CREATE INDEX` ожидаются два индекса: `IX_Employees_DepartmentId` и `IX_Employees_Salary`.
+
+**Сравнение планов и logical reads (заполнить выводом SSMS):**
+
+| Измерение | До индексов | После индексов |
+| --- | --- | --- |
+| Оператор плана | Вывод `SHOWPLAN_TEXT` | Вывод `SHOWPLAN_TEXT` |
+| `logical reads` | Из сообщений `STATISTICS IO` | Из сообщений `STATISTICS IO` |
+
+На учебной таблице всего 10 сотрудников, поэтому SQL Server может выбрать сканирование таблицы даже после создания индексов. Отличие плана и уменьшение `logical reads` нельзя гарантировать: они зависят от оптимизатора и количества данных. Точные значения нужно перенести из SSMS.
+
+### Вывод
+
+Индекс помогает находить записи по столбцу, но на очень маленькой таблице может не использоваться. `SHOWPLAN_TEXT` показывает выбранный план, а `STATISTICS IO` — число логических чтений.
+
+## Task 21 — Хранимые процедуры
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Первая процедура: сотрудники выбранного отдела.
+CREATE OR ALTER PROCEDURE dbo.sp_GetEmployeesByDepartment
+    @DeptId INT
+AS
+BEGIN
+    SELECT EmployeeId, EmployeeName, Salary
+    FROM Employees
+    WHERE DepartmentId = @DeptId
+    ORDER BY EmployeeId;
+END;
+GO
+
+EXEC dbo.sp_GetEmployeesByDepartment @DeptId = 1;
+GO
+
+-- Вторая процедура: средняя зарплата через OUTPUT-параметр.
+CREATE OR ALTER PROCEDURE dbo.sp_GetAverageSalaryByDepartment
+    @DeptId INT,
+    @AvgSalary DECIMAL(10,2) OUTPUT
+AS
+BEGIN
+    SELECT @AvgSalary = AVG(Salary)
+    FROM Employees
+    WHERE DepartmentId = @DeptId;
+END;
+GO
+
+DECLARE @Result DECIMAL(10,2);
+
+EXEC dbo.sp_GetAverageSalaryByDepartment
+    @DeptId = 1,
+    @AvgSalary = @Result OUTPUT;
+
+SELECT @Result AS AverageSalary;
+GO
+
+-- Проверка отдела, в котором нет сотрудников.
+DECLARE @EmptyResult DECIMAL(10,2);
+
+EXEC dbo.sp_GetAverageSalaryByDepartment
+    @DeptId = 99,
+    @AvgSalary = @EmptyResult OUTPUT;
+
+SELECT @EmptyResult AS AverageSalary;
+GO
+```
+
+### Результат
+
+После выполнения `init.sql` первая процедура с `@DeptId = 1` возвращает четырёх сотрудников:
+
+| EmployeeId | EmployeeName | Salary |
+| ---: | --- | ---: |
+| 1 | Анна Иванова | 65000.00 |
+| 2 | Пётр Сидоров | 72000.00 |
+| 3 | Мария Кузнецова | 55000.00 |
+| 4 | Иван Петров | 48000.00 |
+
+Вторая процедура возвращает `AverageSalary = 60000.00`. Для отдела №99 без сотрудников результатом будет `NULL`.
+
+### Вывод
+
+Хранимая процедура выполняет сохранённый запрос и принимает параметры. Параметр `OUTPUT` позволяет вернуть вычисленное значение после выполнения процедуры.
+
+## Task 22 — Скалярная и табличная функции
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Скалярная функция: зарплата за 12 месяцев.
+CREATE OR ALTER FUNCTION dbo.fn_GetAnnualSalary
+(
+    @MonthlySalary DECIMAL(10,2)
+)
+RETURNS DECIMAL(12,2)
+AS
+BEGIN
+    DECLARE @AnnualSalary DECIMAL(12,2);
+    SET @AnnualSalary = @MonthlySalary * 12;
+    RETURN @AnnualSalary;
+END;
+GO
+
+-- Табличная функция: сотрудники с зарплатой в заданном диапазоне.
+CREATE OR ALTER FUNCTION dbo.fn_GetEmployeesBySalaryRange
+(
+    @Min DECIMAL(10,2),
+    @Max DECIMAL(10,2)
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT EmployeeId, EmployeeName, Salary
+    FROM Employees
+    WHERE Salary BETWEEN @Min AND @Max
+);
+GO
+
+-- Вызов скалярной функции в SELECT.
+SELECT dbo.fn_GetAnnualSalary(65000) AS AnnualSalary;
+GO
+
+-- Вызов табличной функции в FROM.
+SELECT EmployeeId, EmployeeName, Salary
+FROM dbo.fn_GetEmployeesBySalaryRange(40000, 60000)
+ORDER BY EmployeeId;
+GO
+
+-- Проверка пустого диапазона.
+SELECT EmployeeId, EmployeeName, Salary
+FROM dbo.fn_GetEmployeesBySalaryRange(100000, 200000)
+ORDER BY EmployeeId;
+GO
+```
+
+### Результат
+
+Скалярная функция для зарплаты `65000` возвращает годовую зарплату `780000.00`.
+
+Табличная функция с диапазоном `40000–60000` возвращает шесть сотрудников:
+
+| EmployeeId | EmployeeName | Salary |
+| ---: | --- | ---: |
+| 3 | Мария Кузнецова | 55000.00 |
+| 4 | Иван Петров | 48000.00 |
+| 6 | Дмитрий Орлов | 58000.00 |
+| 7 | Елена Волкова | 52000.00 |
+| 8 | Сергей Морозов | 45000.00 |
+| 9 | Наталья Соколова | 43000.00 |
+
+В диапазоне `100000–200000` сотрудников нет, поэтому результат — пустая таблица.
+
+### Вывод
+
+Скалярная функция возвращает одно значение и вызывается в `SELECT`. Табличная возвращает набор строк и вызывается в `FROM`.
