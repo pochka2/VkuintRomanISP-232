@@ -812,3 +812,72 @@ FROM EmployeeProjects;
 ### Вывод
 
 `DELETE ... WHERE` удаляет только подходящие строки, а без `WHERE` — все строки в таблице. Перед удалением сотрудника нужно учитывать внешние ключи. `ROLLBACK` отменяет изменения после демонстрации.
+
+## Task 18 — Транзакции: COMMIT и ROLLBACK
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Пример 1. Отмена изменения.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+BEGIN TRANSACTION;
+
+UPDATE Employees
+SET Salary = Salary + 1000
+WHERE EmployeeId = 1;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+ROLLBACK TRANSACTION;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+-- Пример 2. Сохранение изменения.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+BEGIN TRANSACTION;
+
+UPDATE Employees
+SET Salary = Salary + 1000
+WHERE EmployeeId = 1;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+COMMIT TRANSACTION;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+```
+
+### Результат
+
+При запуске после `init.sql` зарплата Анны Ивановой (`EmployeeId = 1`) меняется так:
+
+| Проверка | Зарплата |
+| --- | ---: |
+| До первой транзакции | 65000.00 |
+| Внутри первой транзакции | 66000.00 |
+| После `ROLLBACK` | 65000.00 |
+| Внутри второй транзакции | 66000.00 |
+| После `COMMIT` | 66000.00 |
+
+**Важно:** `COMMIT` сохраняет изменение в базе. Чтобы снова получить исходные тестовые данные, нужно повторно выполнить `init.sql` (он пересоздаёт всю `PracticeDB`). При повторном запуске задания без восстановления базы зарплата увеличится ещё на 1000.
+
+### Вывод
+
+`ROLLBACK` отменяет изменение зарплаты, а `COMMIT` сохраняет его. `SELECT` показывает значения до, внутри и после транзакции.
