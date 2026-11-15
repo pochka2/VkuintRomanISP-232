@@ -339,3 +339,305 @@ ORDER BY d.DepartmentName ASC, e.Salary DESC;
 ### Вывод
 
 `INNER JOIN` соединяет сотрудников с отделами по `DepartmentId`. Сначала строки сортируются по названию отдела, затем по зарплате по убыванию.
+
+## Task 09 — LEFT JOIN — сотрудники без проектов
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT e.EmployeeId, e.EmployeeName
+FROM Employees e
+LEFT JOIN EmployeeProjects ep ON e.EmployeeId = ep.EmployeeId
+WHERE ep.EmployeeId IS NULL
+ORDER BY e.EmployeeId;
+```
+
+### Результат
+
+На данных из `init.sql` ожидается одна строка:
+
+| EmployeeId | EmployeeName |
+| ---: | --- |
+| 9 | Наталья Соколова |
+
+### Вывод
+
+`LEFT JOIN` оставляет всех сотрудников, а для отсутствующих назначений на проекты возвращает `NULL`. Условие `IS NULL` находит сотрудников без проектов.
+
+## Task 10 — Множественный JOIN — сотрудники, отделы и проекты
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    e.EmployeeName,
+    d.DepartmentName,
+    p.ProjectName,
+    ep.Hours
+FROM Employees e
+INNER JOIN Departments d ON e.DepartmentId = d.DepartmentId
+INNER JOIN EmployeeProjects ep ON e.EmployeeId = ep.EmployeeId
+INNER JOIN Projects p ON ep.ProjectId = p.ProjectId
+ORDER BY d.DepartmentName, e.EmployeeName, p.ProjectName;
+```
+
+### Результат
+
+На тестовых данных ожидаются 14 назначений:
+
+| EmployeeName | DepartmentName | ProjectName | Hours |
+| --- | --- | --- | ---: |
+| Дмитрий Орлов | Аналитика | AI Assistant | 50 |
+| Дмитрий Орлов | Аналитика | Data Warehouse | 70 |
+| Елена Волкова | Аналитика | Mobile App | 95 |
+| Ольга Смирнова | Аналитика | Data Warehouse | 110 |
+| Алексей Лебедев | Менеджмент | AI Assistant | 200 |
+| Алексей Лебедев | Менеджмент | CRM System | 30 |
+| Анна Иванова | Разработка | CRM System | 120 |
+| Анна Иванова | Разработка | Data Warehouse | 80 |
+| Иван Петров | Разработка | Legacy Refactor | 40 |
+| Иван Петров | Разработка | Mobile App | 90 |
+| Мария Кузнецова | Разработка | Mobile App | 100 |
+| Пётр Сидоров | Разработка | AI Assistant | 60 |
+| Пётр Сидоров | Разработка | CRM System | 150 |
+| Сергей Морозов | Тестирование | Legacy Refactor | 130 |
+
+### Вывод
+
+Через `INNER JOIN` соединены все четыре таблицы. Для каждого назначения выводятся сотрудник, отдел, проект и часы; `ORDER BY` задаёт порядок по трём полям.
+
+## Task 11 — SELF JOIN — руководители сотрудников
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    e.EmployeeName,
+    m.EmployeeName AS ManagerName
+FROM Employees e
+LEFT JOIN Employees m ON e.ManagerId = m.EmployeeId
+ORDER BY e.EmployeeId;
+```
+
+### Результат
+
+На исходных данных ожидаются 10 строк:
+
+| EmployeeName | ManagerName |
+| --- | --- |
+| Анна Иванова | NULL |
+| Пётр Сидоров | NULL |
+| Мария Кузнецова | Пётр Сидоров |
+| Иван Петров | Анна Иванова |
+| Ольга Смирнова | NULL |
+| Дмитрий Орлов | Ольга Смирнова |
+| Елена Волкова | NULL |
+| Сергей Морозов | NULL |
+| Наталья Соколова | Алексей Лебедев |
+| Алексей Лебедев | NULL |
+
+### Вывод
+
+Таблица `Employees` соединяется сама с собой по `ManagerId`. `LEFT JOIN` нужен, чтобы сотрудники без руководителя тоже попали в результат.
+
+## Task 12 — Подзапросы в WHERE
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Сотрудники с зарплатой выше средней.
+SELECT EmployeeName, Salary
+FROM Employees
+WHERE Salary > (SELECT AVG(Salary) FROM Employees)
+ORDER BY Salary DESC;
+
+-- Сотрудники с самой большой зарплатой.
+SELECT EmployeeName, Salary
+FROM Employees
+WHERE Salary = (SELECT MAX(Salary) FROM Employees)
+ORDER BY EmployeeName;
+```
+
+### Результат
+
+Средняя зарплата по тестовым данным — 58900.00.
+
+Сотрудники с зарплатой выше средней:
+
+| EmployeeName | Salary |
+| --- | ---: |
+| Алексей Лебедев | 90000.00 |
+| Пётр Сидоров | 72000.00 |
+| Анна Иванова | 65000.00 |
+| Ольга Смирнова | 61000.00 |
+
+Максимальная зарплата — 90000.00, её получает Алексей Лебедев.
+
+### Вывод
+
+Подзапрос сначала вычисляет среднюю или максимальную зарплату, а внешний запрос использует это число в условии `WHERE`.
+
+## Task 13 — Скалярные подзапросы в SELECT
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    e.EmployeeName,
+    e.Salary,
+    e.DepartmentId,
+    ROUND((
+        SELECT AVG(e2.Salary)
+        FROM Employees e2
+        WHERE e2.DepartmentId = e.DepartmentId
+    ), 2) AS DepartmentAverage,
+    ROUND(e.Salary - (
+        SELECT AVG(e3.Salary)
+        FROM Employees e3
+        WHERE e3.DepartmentId = e.DepartmentId
+    ), 2) AS SalaryDifference
+FROM Employees e
+ORDER BY e.EmployeeId;
+```
+
+### Результат
+
+На тестовых данных:
+
+| EmployeeName | Salary | DepartmentId | DepartmentAverage | SalaryDifference |
+| --- | ---: | ---: | ---: | ---: |
+| Анна Иванова | 65000.00 | 1 | 60000.00 | 5000.00 |
+| Пётр Сидоров | 72000.00 | 1 | 60000.00 | 12000.00 |
+| Мария Кузнецова | 55000.00 | 1 | 60000.00 | -5000.00 |
+| Иван Петров | 48000.00 | 1 | 60000.00 | -12000.00 |
+| Ольга Смирнова | 61000.00 | 2 | 57000.00 | 4000.00 |
+| Дмитрий Орлов | 58000.00 | 2 | 57000.00 | 1000.00 |
+| Елена Волкова | 52000.00 | 2 | 57000.00 | -5000.00 |
+| Сергей Морозов | 45000.00 | 3 | 44000.00 | 1000.00 |
+| Наталья Соколова | 43000.00 | 3 | 44000.00 | -1000.00 |
+| Алексей Лебедев | 90000.00 | 4 | 90000.00 | 0.00 |
+
+### Вывод
+
+Скалярные подзапросы в `SELECT` вычисляют среднюю зарплату для отдела каждого сотрудника. Разница положительная, если зарплата выше средней, и отрицательная, если ниже.
+
+## Task 14 — EXISTS и NOT EXISTS
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Сотрудники с хотя бы одним проектом.
+SELECT e.EmployeeId, e.EmployeeName
+FROM Employees e
+WHERE EXISTS (
+    SELECT 1
+    FROM EmployeeProjects ep
+    WHERE ep.EmployeeId = e.EmployeeId
+)
+ORDER BY e.EmployeeId;
+
+-- Сотрудники без проектов.
+SELECT e.EmployeeId, e.EmployeeName
+FROM Employees e
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM EmployeeProjects ep
+    WHERE ep.EmployeeId = e.EmployeeId
+)
+ORDER BY e.EmployeeId;
+```
+
+### Результат
+
+На исходных данных первый запрос возвращает 9 сотрудников: Анна Иванова, Пётр Сидоров, Мария Кузнецова, Иван Петров, Ольга Смирнова, Дмитрий Орлов, Елена Волкова, Сергей Морозов, Алексей Лебедев.
+
+Второй запрос возвращает одного сотрудника:
+
+| EmployeeId | EmployeeName |
+| ---: | --- |
+| 9 | Наталья Соколова |
+
+### Вывод
+
+`EXISTS` проверяет наличие хотя бы одной подходящей записи, `NOT EXISTS` — её отсутствие. Запрос с `NOT EXISTS` даёт ту же выборку, что и `LEFT JOIN` в задании №9.
+
+## Task 15 — UNION и UNION ALL
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Объединить две выборки без повторений.
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE Salary > 60000
+UNION
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE HireDate < '2022-01-01'
+ORDER BY EmployeeId;
+
+-- Объединить две выборки, сохранив повторения.
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE Salary > 60000
+UNION ALL
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE HireDate < '2022-01-01'
+ORDER BY EmployeeId;
+```
+
+### Результат
+
+В первой выборке 4 сотрудника с зарплатой выше 60000, во второй — 6 сотрудников, принятых до 2022 года.
+
+`UNION` возвращает **6 уникальных строк**:
+
+| EmployeeId | EmployeeName |
+| ---: | --- |
+| 1 | Анна Иванова |
+| 2 | Пётр Сидоров |
+| 3 | Мария Кузнецова |
+| 5 | Ольга Смирнова |
+| 8 | Сергей Морозов |
+| 10 | Алексей Лебедев |
+
+`UNION ALL` возвращает **10 строк** с повторениями:
+
+| EmployeeId | EmployeeName |
+| ---: | --- |
+| 1 | Анна Иванова |
+| 1 | Анна Иванова |
+| 2 | Пётр Сидоров |
+| 2 | Пётр Сидоров |
+| 3 | Мария Кузнецова |
+| 5 | Ольга Смирнова |
+| 5 | Ольга Смирнова |
+| 8 | Сергей Морозов |
+| 10 | Алексей Лебедев |
+| 10 | Алексей Лебедев |
+
+### Вывод
+
+`UNION` убирает повторяющиеся строки, а `UNION ALL` оставляет их. Анна, Пётр, Ольга и Алексей подходят сразу под оба условия, поэтому при `UNION ALL` встречаются два раза.
