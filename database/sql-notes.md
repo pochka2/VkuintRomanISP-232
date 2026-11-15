@@ -578,3 +578,66 @@ ORDER BY e.EmployeeId;
 ### Вывод
 
 `EXISTS` проверяет наличие хотя бы одной подходящей записи, `NOT EXISTS` — её отсутствие. Запрос с `NOT EXISTS` даёт ту же выборку, что и `LEFT JOIN` в задании №9.
+
+## Task 15 — UNION и UNION ALL
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Объединить две выборки без повторений.
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE Salary > 60000
+UNION
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE HireDate < '2022-01-01'
+ORDER BY EmployeeId;
+
+-- Объединить две выборки, сохранив повторения.
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE Salary > 60000
+UNION ALL
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE HireDate < '2022-01-01'
+ORDER BY EmployeeId;
+```
+
+### Результат
+
+В первой выборке 4 сотрудника с зарплатой выше 60000, во второй — 6 сотрудников, принятых до 2022 года.
+
+`UNION` возвращает **6 уникальных строк**:
+
+| EmployeeId | EmployeeName |
+| ---: | --- |
+| 1 | Анна Иванова |
+| 2 | Пётр Сидоров |
+| 3 | Мария Кузнецова |
+| 5 | Ольга Смирнова |
+| 8 | Сергей Морозов |
+| 10 | Алексей Лебедев |
+
+`UNION ALL` возвращает **10 строк** с повторениями:
+
+| EmployeeId | EmployeeName |
+| ---: | --- |
+| 1 | Анна Иванова |
+| 1 | Анна Иванова |
+| 2 | Пётр Сидоров |
+| 2 | Пётр Сидоров |
+| 3 | Мария Кузнецова |
+| 5 | Ольга Смирнова |
+| 5 | Ольга Смирнова |
+| 8 | Сергей Морозов |
+| 10 | Алексей Лебедев |
+| 10 | Алексей Лебедев |
+
+### Вывод
+
+`UNION` убирает повторяющиеся строки, а `UNION ALL` оставляет их. Анна, Пётр, Ольга и Алексей подходят сразу под оба условия, поэтому при `UNION ALL` встречаются два раза.
