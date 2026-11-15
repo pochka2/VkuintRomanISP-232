@@ -881,3 +881,61 @@ WHERE EmployeeId = 1;
 ### Вывод
 
 `ROLLBACK` отменяет изменение зарплаты, а `COMMIT` сохраняет его. `SELECT` показывает значения до, внутри и после транзакции.
+
+## Task 19 — VIEW: представление сотрудников и проектов
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Если представление уже есть, удаляем его перед созданием.
+IF OBJECT_ID(N'dbo.vw_EmployeeDetails', N'V') IS NOT NULL
+    DROP VIEW dbo.vw_EmployeeDetails;
+GO
+
+-- CREATE VIEW выполняется отдельным пакетом команд.
+CREATE VIEW dbo.vw_EmployeeDetails
+AS
+SELECT
+    e.EmployeeName,
+    d.DepartmentName,
+    p.ProjectName,
+    ep.Hours
+FROM Employees e
+INNER JOIN Departments d ON e.DepartmentId = d.DepartmentId
+INNER JOIN EmployeeProjects ep ON e.EmployeeId = ep.EmployeeId
+INNER JOIN Projects p ON ep.ProjectId = p.ProjectId;
+GO
+
+SELECT *
+FROM dbo.vw_EmployeeDetails
+ORDER BY DepartmentName, EmployeeName, ProjectName;
+GO
+
+DROP VIEW dbo.vw_EmployeeDetails;
+GO
+
+-- После удаления представления OBJECT_ID вернёт NULL.
+SELECT OBJECT_ID(N'dbo.vw_EmployeeDetails', N'V') AS ViewAfterDrop;
+```
+
+### Результат
+
+После создания `vw_EmployeeDetails` на исходных тестовых данных ожидается **14 строк** (по числу назначений сотрудников на проекты).
+
+Примеры строк:
+
+| EmployeeName | DepartmentName | ProjectName | Hours |
+| --- | --- | --- | ---: |
+| Дмитрий Орлов | Аналитика | AI Assistant | 50 |
+| Елена Волкова | Аналитика | Mobile App | 95 |
+| Алексей Лебедев | Менеджмент | CRM System | 30 |
+| Анна Иванова | Разработка | Data Warehouse | 80 |
+
+После выполнения `DROP VIEW` запрос с `OBJECT_ID` возвращает `NULL`. Само представление удаляется, а исходные таблицы и их данные остаются.
+
+### Вывод
+
+`VIEW` позволяет сохранить запрос к связанным таблицам и обращаться к нему как к таблице. `DROP VIEW` удаляет только представление.
