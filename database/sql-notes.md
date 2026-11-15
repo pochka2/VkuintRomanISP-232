@@ -448,3 +448,43 @@ ORDER BY e.EmployeeId;
 ### Вывод
 
 Таблица `Employees` соединяется сама с собой по `ManagerId`. `LEFT JOIN` нужен, чтобы сотрудники без руководителя тоже попали в результат.
+
+## Task 12 — Подзапросы в WHERE
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Сотрудники с зарплатой выше средней.
+SELECT EmployeeName, Salary
+FROM Employees
+WHERE Salary > (SELECT AVG(Salary) FROM Employees)
+ORDER BY Salary DESC;
+
+-- Сотрудники с самой большой зарплатой.
+SELECT EmployeeName, Salary
+FROM Employees
+WHERE Salary = (SELECT MAX(Salary) FROM Employees)
+ORDER BY EmployeeName;
+```
+
+### Результат
+
+Средняя зарплата по тестовым данным — 58900.00.
+
+Сотрудники с зарплатой выше средней:
+
+| EmployeeName | Salary |
+| --- | ---: |
+| Алексей Лебедев | 90000.00 |
+| Пётр Сидоров | 72000.00 |
+| Анна Иванова | 65000.00 |
+| Ольга Смирнова | 61000.00 |
+
+Максимальная зарплата — 90000.00, её получает Алексей Лебедев.
+
+### Вывод
+
+Подзапрос сначала вычисляет среднюю или максимальную зарплату, а внешний запрос использует это число в условии `WHERE`.
