@@ -641,3 +641,301 @@ ORDER BY EmployeeId;
 ### Вывод
 
 `UNION` убирает повторяющиеся строки, а `UNION ALL` оставляет их. Анна, Пётр, Ольга и Алексей подходят сразу под оба условия, поэтому при `UNION ALL` встречаются два раза.
+
+## Task 16 — UPDATE: изменение данных
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Все изменения выполняются в транзакции.
+BEGIN TRANSACTION;
+
+-- 1. Увеличить зарплаты первого отдела на 10%.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1
+ORDER BY EmployeeId;
+
+UPDATE Employees
+SET Salary = Salary * 1.10
+WHERE DepartmentId = 1;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE DepartmentId = 1
+ORDER BY EmployeeId;
+
+-- 2. Увеличить зарплату на 5000 принятым до 2022 года.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE HireDate < '2022-01-01'
+ORDER BY EmployeeId;
+
+UPDATE Employees
+SET Salary = Salary + 5000
+WHERE HireDate < '2022-01-01';
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE HireDate < '2022-01-01'
+ORDER BY EmployeeId;
+
+-- 3. Изменить дату найма одного сотрудника.
+SELECT EmployeeId, EmployeeName, HireDate
+FROM Employees
+WHERE EmployeeId = 4;
+
+UPDATE Employees
+SET HireDate = '2023-03-10'
+WHERE EmployeeId = 4;
+
+SELECT EmployeeId, EmployeeName, HireDate
+FROM Employees
+WHERE EmployeeId = 4;
+
+-- Возвращаем исходные данные для остальных заданий.
+ROLLBACK TRANSACTION;
+
+SELECT EmployeeId, EmployeeName, Salary, HireDate
+FROM Employees
+WHERE EmployeeId IN (1, 4)
+ORDER BY EmployeeId;
+```
+
+### Результат
+
+Ожидаемые изменения на данных из `init.sql`:
+
+| Действие | До | После |
+| --- | --- | --- |
+| Зарплата Анны, отдел 1 | 65000.00 | 71500.00 |
+| Зарплата Петра, отдел 1 | 72000.00 | 79200.00 |
+| Зарплата Анны после прибавки 5000 | 71500.00 | 76500.00 |
+| Зарплата Ольги после прибавки 5000 | 61000.00 | 66000.00 |
+| Дата найма Ивана | 2023-02-10 | 2023-03-10 |
+
+Первый `UPDATE` изменяет 4 строки, второй — 6 строк, третий — 1 строку. Сотрудники, не подходящие под условия, не изменяются. После `ROLLBACK` данные снова исходные.
+
+### Вывод
+
+`UPDATE` изменяет только строки, указанные в `WHERE`. `SELECT` до и после помогает проверить результат. `ROLLBACK` сохраняет исходные тестовые данные.
+
+## Task 17 — DELETE: удаление данных
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Пробуем удалить записи, не сохраняя изменения в учебной базе.
+BEGIN TRANSACTION;
+
+-- 1. Удалить назначения с нулевым количеством часов (если есть).
+SELECT COUNT(*) AS AssignmentsBefore
+FROM EmployeeProjects;
+SELECT COUNT(*) AS ZeroHoursBefore
+FROM EmployeeProjects
+WHERE Hours = 0;
+
+DELETE FROM EmployeeProjects
+WHERE Hours = 0;
+
+SELECT COUNT(*) AS AssignmentsAfter
+FROM EmployeeProjects;
+
+-- 2. Удалить сотрудника №8, предварительно удалив его назначения.
+SELECT EmployeeId, EmployeeName
+FROM Employees
+WHERE EmployeeId = 8;
+SELECT COUNT(*) AS EmployeeAssignmentsBefore
+FROM EmployeeProjects
+WHERE EmployeeId = 8;
+
+DELETE FROM EmployeeProjects
+WHERE EmployeeId = 8;
+
+SELECT COUNT(*) AS AssignmentsAfterEmployeeCleanup
+FROM EmployeeProjects;
+
+SELECT COUNT(*) AS EmployeesBefore
+FROM Employees;
+
+DELETE FROM Employees
+WHERE EmployeeId = 8;
+
+SELECT COUNT(*) AS EmployeesAfter
+FROM Employees;
+
+-- 3. DELETE без WHERE только на тестовой копии.
+SELECT EmployeeId, EmployeeName
+INTO #EmployeesCopy
+FROM Employees;
+
+SELECT COUNT(*) AS CopyBefore
+FROM #EmployeesCopy;
+
+DELETE FROM #EmployeesCopy;
+
+SELECT COUNT(*) AS CopyAfter
+FROM #EmployeesCopy;
+
+DROP TABLE #EmployeesCopy;
+
+-- Отменяем удаления из основных таблиц.
+ROLLBACK TRANSACTION;
+
+SELECT COUNT(*) AS EmployeesRestored
+FROM Employees;
+SELECT COUNT(*) AS AssignmentsRestored
+FROM EmployeeProjects;
+```
+
+### Результат
+
+На данных `init.sql` ожидаются следующие количества:
+
+| Действие | До | После |
+| --- | ---: | ---: |
+| Удаление назначений с `Hours = 0` | 14 | 14 |
+| Удаление назначений сотрудника №8 | 14 | 13 |
+| Удаление сотрудника №8 | 10 | 9 |
+| `DELETE` без `WHERE` на копии | 9 | 0 |
+| После `ROLLBACK`: сотрудники | 10 | 10 |
+| После `ROLLBACK`: назначения | 14 | 14 |
+
+В исходных данных нет назначений с нулевыми часами, поэтому первое удаление не затрагивает строки. У Сергея Морозова (`EmployeeId = 8`) есть одно назначение на проект и нет подчинённых, поэтому его можно удалить после удаления назначения.
+
+### Вывод
+
+`DELETE ... WHERE` удаляет только подходящие строки, а без `WHERE` — все строки в таблице. Перед удалением сотрудника нужно учитывать внешние ключи. `ROLLBACK` отменяет изменения после демонстрации.
+
+## Task 18 — Транзакции: COMMIT и ROLLBACK
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Пример 1. Отмена изменения.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+BEGIN TRANSACTION;
+
+UPDATE Employees
+SET Salary = Salary + 1000
+WHERE EmployeeId = 1;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+ROLLBACK TRANSACTION;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+-- Пример 2. Сохранение изменения.
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+BEGIN TRANSACTION;
+
+UPDATE Employees
+SET Salary = Salary + 1000
+WHERE EmployeeId = 1;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+
+COMMIT TRANSACTION;
+
+SELECT EmployeeId, EmployeeName, Salary
+FROM Employees
+WHERE EmployeeId = 1;
+```
+
+### Результат
+
+При запуске после `init.sql` зарплата Анны Ивановой (`EmployeeId = 1`) меняется так:
+
+| Проверка | Зарплата |
+| --- | ---: |
+| До первой транзакции | 65000.00 |
+| Внутри первой транзакции | 66000.00 |
+| После `ROLLBACK` | 65000.00 |
+| Внутри второй транзакции | 66000.00 |
+| После `COMMIT` | 66000.00 |
+
+**Важно:** `COMMIT` сохраняет изменение в базе. Чтобы снова получить исходные тестовые данные, нужно повторно выполнить `init.sql` (он пересоздаёт всю `PracticeDB`). При повторном запуске задания без восстановления базы зарплата увеличится ещё на 1000.
+
+### Вывод
+
+`ROLLBACK` отменяет изменение зарплаты, а `COMMIT` сохраняет его. `SELECT` показывает значения до, внутри и после транзакции.
+
+## Task 19 — VIEW: представление сотрудников и проектов
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+-- Если представление уже есть, удаляем его перед созданием.
+IF OBJECT_ID(N'dbo.vw_EmployeeDetails', N'V') IS NOT NULL
+    DROP VIEW dbo.vw_EmployeeDetails;
+GO
+
+-- CREATE VIEW выполняется отдельным пакетом команд.
+CREATE VIEW dbo.vw_EmployeeDetails
+AS
+SELECT
+    e.EmployeeName,
+    d.DepartmentName,
+    p.ProjectName,
+    ep.Hours
+FROM Employees e
+INNER JOIN Departments d ON e.DepartmentId = d.DepartmentId
+INNER JOIN EmployeeProjects ep ON e.EmployeeId = ep.EmployeeId
+INNER JOIN Projects p ON ep.ProjectId = p.ProjectId;
+GO
+
+SELECT *
+FROM dbo.vw_EmployeeDetails
+ORDER BY DepartmentName, EmployeeName, ProjectName;
+GO
+
+DROP VIEW dbo.vw_EmployeeDetails;
+GO
+
+-- После удаления представления OBJECT_ID вернёт NULL.
+SELECT OBJECT_ID(N'dbo.vw_EmployeeDetails', N'V') AS ViewAfterDrop;
+```
+
+### Результат
+
+После создания `vw_EmployeeDetails` на исходных тестовых данных ожидается **14 строк** (по числу назначений сотрудников на проекты).
+
+Примеры строк:
+
+| EmployeeName | DepartmentName | ProjectName | Hours |
+| --- | --- | --- | ---: |
+| Дмитрий Орлов | Аналитика | AI Assistant | 50 |
+| Елена Волкова | Аналитика | Mobile App | 95 |
+| Алексей Лебедев | Менеджмент | CRM System | 30 |
+| Анна Иванова | Разработка | Data Warehouse | 80 |
+
+После выполнения `DROP VIEW` запрос с `OBJECT_ID` возвращает `NULL`. Само представление удаляется, а исходные таблицы и их данные остаются.
+
+### Вывод
+
+`VIEW` позволяет сохранить запрос к связанным таблицам и обращаться к нему как к таблице. `DROP VIEW` удаляет только представление.
