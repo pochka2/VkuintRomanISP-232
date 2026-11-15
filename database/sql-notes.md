@@ -1370,3 +1370,52 @@ ORDER BY t.AverageSalary DESC, d.DepartmentId;
 ### Вывод
 
 В задании 12 средняя зарплата считалась подзапросом прямо в `WHERE`. С `WITH AvgSalary` вычисление вынесено отдельно, поэтому условие проще читать. Результат одинаковый.
+
+## Task 26 — CASE: категории зарплаты и стажа
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    EmployeeName,
+    Salary,
+    CASE
+        WHEN Salary > 60000 THEN 'High'
+        WHEN Salary >= 40000 THEN 'Medium'
+        ELSE 'Low'
+    END AS SalaryLevel,
+    HireDate,
+    CASE
+        WHEN HireDate < '2020-01-01' THEN 'Senior'
+        WHEN HireDate < '2023-01-01' THEN 'Mid'
+        ELSE 'Junior'
+    END AS Tenure
+FROM Employees
+ORDER BY EmployeeId;
+```
+
+### Результат
+
+Ожидаемый результат после запуска `init.sql`:
+
+| EmployeeName | Salary | SalaryLevel | HireDate | Tenure |
+| --- | ---: | --- | --- | --- |
+| Анна Иванова | 65000.00 | High | 2020-03-15 | Mid |
+| Пётр Сидоров | 72000.00 | High | 2019-07-01 | Senior |
+| Мария Кузнецова | 55000.00 | Medium | 2021-11-20 | Mid |
+| Иван Петров | 48000.00 | Medium | 2023-02-10 | Junior |
+| Ольга Смирнова | 61000.00 | High | 2020-09-05 | Mid |
+| Дмитрий Орлов | 58000.00 | Medium | 2022-04-18 | Mid |
+| Елена Волкова | 52000.00 | Medium | 2023-06-01 | Junior |
+| Сергей Морозов | 45000.00 | Medium | 2021-12-12 | Mid |
+| Наталья Соколова | 43000.00 | Medium | 2024-01-15 | Junior |
+| Алексей Лебедев | 90000.00 | High | 2018-05-25 | Senior |
+
+В этих данных нет зарплат ниже 40000, поэтому категория `Low` не встречается. Значение 60000 относится к `Medium`, а дата 2023-01-01 — к `Junior`.
+
+### Вывод
+
+`CASE` позволяет выводить категории по условиям без изменения данных в таблице.
