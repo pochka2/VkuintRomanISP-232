@@ -411,3 +411,40 @@ ORDER BY d.DepartmentName, e.EmployeeName, p.ProjectName;
 ### Вывод
 
 Через `INNER JOIN` соединены все четыре таблицы. Для каждого назначения выводятся сотрудник, отдел, проект и часы; `ORDER BY` задаёт порядок по трём полям.
+
+## Task 11 — SELF JOIN — руководители сотрудников
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    e.EmployeeName,
+    m.EmployeeName AS ManagerName
+FROM Employees e
+LEFT JOIN Employees m ON e.ManagerId = m.EmployeeId
+ORDER BY e.EmployeeId;
+```
+
+### Результат
+
+На исходных данных ожидаются 10 строк:
+
+| EmployeeName | ManagerName |
+| --- | --- |
+| Анна Иванова | NULL |
+| Пётр Сидоров | NULL |
+| Мария Кузнецова | Пётр Сидоров |
+| Иван Петров | Анна Иванова |
+| Ольга Смирнова | NULL |
+| Дмитрий Орлов | Ольга Смирнова |
+| Елена Волкова | NULL |
+| Сергей Морозов | NULL |
+| Наталья Соколова | Алексей Лебедев |
+| Алексей Лебедев | NULL |
+
+### Вывод
+
+Таблица `Employees` соединяется сама с собой по `ManagerId`. `LEFT JOIN` нужен, чтобы сотрудники без руководителя тоже попали в результат.
