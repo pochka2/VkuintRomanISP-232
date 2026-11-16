@@ -1419,3 +1419,50 @@ ORDER BY EmployeeId;
 ### Вывод
 
 `CASE` позволяет выводить категории по условиям без изменения данных в таблице.
+
+## Task 27 — Работа с датами: DATEADD, DATEDIFF, FORMAT
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    EmployeeName,
+    HireDate,
+    DATEDIFF(YEAR, HireDate, GETDATE())
+        - CASE
+            WHEN DATEADD(YEAR, DATEDIFF(YEAR, HireDate, GETDATE()), HireDate)
+                 > CAST(GETDATE() AS DATE) THEN 1
+            ELSE 0
+          END AS FullYears,
+    DATEDIFF(MONTH, HireDate, GETDATE()) AS MonthsOfService,
+    DATEADD(YEAR, 1, HireDate) AS OneYearAfterHire,
+    FORMAT(HireDate, 'dd.MM.yyyy') AS FormattedHireDate
+FROM Employees
+ORDER BY EmployeeId;
+```
+
+### Результат
+
+Ожидаемый результат для данных из `init.sql` на 16.11.2026:
+
+| EmployeeName | HireDate | FullYears | MonthsOfService | OneYearAfterHire | FormattedHireDate |
+| --- | --- | ---: | ---: | --- | --- |
+| Анна Иванова | 2020-03-15 | 6 | 80 | 2021-03-15 | 15.03.2020 |
+| Пётр Сидоров | 2019-07-01 | 7 | 88 | 2020-07-01 | 01.07.2019 |
+| Мария Кузнецова | 2021-11-20 | 4 | 60 | 2022-11-20 | 20.11.2021 |
+| Иван Петров | 2023-02-10 | 3 | 45 | 2024-02-10 | 10.02.2023 |
+| Ольга Смирнова | 2020-09-05 | 6 | 74 | 2021-09-05 | 05.09.2020 |
+| Дмитрий Орлов | 2022-04-18 | 4 | 55 | 2023-04-18 | 18.04.2022 |
+| Елена Волкова | 2023-06-01 | 3 | 41 | 2024-06-01 | 01.06.2023 |
+| Сергей Морозов | 2021-12-12 | 4 | 59 | 2022-12-12 | 12.12.2021 |
+| Наталья Соколова | 2024-01-15 | 2 | 34 | 2025-01-15 | 15.01.2024 |
+| Алексей Лебедев | 2018-05-25 | 8 | 102 | 2019-05-25 | 25.05.2018 |
+
+Значения стажа меняются с датой запуска запроса.
+
+### Вывод
+
+`DATEDIFF(YEAR, ...)` считает границы календарных лет, поэтому для полных лет дополнительно проверяется дата годовщины найма. `DATEDIFF(MONTH, ...)` считает границы месяцев, `DATEADD` добавляет год, а `FORMAT` выводит дату в формате `dd.MM.yyyy`.
