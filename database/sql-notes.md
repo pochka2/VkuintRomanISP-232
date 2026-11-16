@@ -1419,3 +1419,126 @@ ORDER BY EmployeeId;
 ### Вывод
 
 `CASE` позволяет выводить категории по условиям без изменения данных в таблице.
+
+## Task 27 — Работа с датами: DATEADD, DATEDIFF, FORMAT
+
+### SQL
+
+```sql
+USE PracticeDB;
+GO
+
+SELECT
+    EmployeeName,
+    HireDate,
+    DATEDIFF(YEAR, HireDate, GETDATE())
+        - CASE
+            WHEN DATEADD(YEAR, DATEDIFF(YEAR, HireDate, GETDATE()), HireDate)
+                 > CAST(GETDATE() AS DATE) THEN 1
+            ELSE 0
+          END AS FullYears,
+    DATEDIFF(MONTH, HireDate, GETDATE()) AS MonthsOfService,
+    DATEADD(YEAR, 1, HireDate) AS OneYearAfterHire,
+    FORMAT(HireDate, 'dd.MM.yyyy') AS FormattedHireDate
+FROM Employees
+ORDER BY EmployeeId;
+```
+
+### Результат
+
+Ожидаемый результат для данных из `init.sql` на 16.11.2026:
+
+| EmployeeName | HireDate | FullYears | MonthsOfService | OneYearAfterHire | FormattedHireDate |
+| --- | --- | ---: | ---: | --- | --- |
+| Анна Иванова | 2020-03-15 | 6 | 80 | 2021-03-15 | 15.03.2020 |
+| Пётр Сидоров | 2019-07-01 | 7 | 88 | 2020-07-01 | 01.07.2019 |
+| Мария Кузнецова | 2021-11-20 | 4 | 60 | 2022-11-20 | 20.11.2021 |
+| Иван Петров | 2023-02-10 | 3 | 45 | 2024-02-10 | 10.02.2023 |
+| Ольга Смирнова | 2020-09-05 | 6 | 74 | 2021-09-05 | 05.09.2020 |
+| Дмитрий Орлов | 2022-04-18 | 4 | 55 | 2023-04-18 | 18.04.2022 |
+| Елена Волкова | 2023-06-01 | 3 | 41 | 2024-06-01 | 01.06.2023 |
+| Сергей Морозов | 2021-12-12 | 4 | 59 | 2022-12-12 | 12.12.2021 |
+| Наталья Соколова | 2024-01-15 | 2 | 34 | 2025-01-15 | 15.01.2024 |
+| Алексей Лебедев | 2018-05-25 | 8 | 102 | 2019-05-25 | 25.05.2018 |
+
+Значения стажа меняются с датой запуска запроса.
+
+### Вывод
+
+`DATEDIFF(YEAR, ...)` считает границы календарных лет, поэтому для полных лет дополнительно проверяется дата годовщины найма. `DATEDIFF(MONTH, ...)` считает границы месяцев, `DATEADD` добавляет год, а `FORMAT` выводит дату в формате `dd.MM.yyyy`.
+
+
+## Task 28 — C# + SQL: подключение и SELECT
+
+### SQL
+
+```sql
+SELECT EmployeeName, Salary
+FROM Employees
+ORDER BY EmployeeId;
+```
+
+### C#
+
+Приложение находится в `database/PracticeDbApp/`. В проекте подключён `Microsoft.Data.SqlClient`. Строка подключения берётся только из переменной окружения `PRACTICE_DB_CONNECTION`.
+
+Метод `ShowEmployees` открывает соединение через `OpenAsync`, читает строки через `SqlDataReader` и обрабатывает `SqlException`.
+
+### Результат
+
+Ожидаемый вывод после запуска `init.sql`:
+
+| EmployeeName | Salary |
+| --- | ---: |
+| Анна Иванова | 65000.00 |
+| Пётр Сидоров | 72000.00 |
+| Мария Кузнецова | 55000.00 |
+| Иван Петров | 48000.00 |
+| Ольга Смирнова | 61000.00 |
+| Дмитрий Орлов | 58000.00 |
+| Елена Волкова | 52000.00 |
+| Сергей Морозов | 45000.00 |
+| Наталья Соколова | 43000.00 |
+| Алексей Лебедев | 90000.00 |
+
+Если сотрудников нет, приложение выводит сообщение об отсутствии записей. Для фактического запуска нужен SQL Server с базой `PracticeDB`.
+
+### Вывод
+
+Через `SqlConnection` C#-приложение соединяется с SQL Server, а `SqlDataReader` читает результаты запроса по строкам.
+
+
+## Task 29 — C# + SQL: параметризованный INSERT
+
+### SQL
+
+```sql
+-- Параметры передаются через SqlCommand из C#, а не подставляются в текст.
+SELECT COUNT(*)
+FROM Employees
+WHERE EmployeeName = @name;
+
+INSERT INTO Employees (EmployeeName, Salary, HireDate, DepartmentId)
+OUTPUT INSERTED.EmployeeId
+VALUES (@name, @salary, CAST(GETDATE() AS DATE), @deptId);
+
+SELECT EmployeeId, EmployeeName, Salary, DepartmentId
+FROM Employees
+WHERE EmployeeId = @id;
+```
+
+### C#
+
+В `database/PracticeDbApp/Program.cs` метод `AddEmployee(string name, decimal salary, int departmentId)` использует параметры `@name`, `@salary`, `@deptId`. После вставки читает добавленную запись по `EmployeeId`.
+
+Перед вставкой проверяет пустое имя и повтор имени. `SqlException` обрабатывает отдельно ошибку внешнего ключа и ошибки дублирования ключей.
+
+### Результат
+
+Пример ввода: `Тестовый сотрудник`, зарплата `50000`, отдел `1`. После успешной вставки ожидается строка с новым `EmployeeId`, именем, зарплатой и отделом. При повторном вводе того же имени программа сообщает, что сотрудник уже существует. При несуществующем отделе сообщает об ошибке внешнего ключа.
+
+Это ожидаемое поведение кода; фактическую вставку нужно проверить при подключении к SQL Server.
+
+### Вывод
+
+Параметры `SqlCommand` передают значения отдельно от SQL-запроса. Это позволяет безопасно добавлять сотрудников без конкатенации пользовательского ввода с SQL.
