@@ -1,3 +1,5 @@
+using System.Data;
+using System.Globalization;
 using Microsoft.Data.SqlClient;
 
 internal class Program
@@ -17,6 +19,7 @@ internal class Program
         {
             Console.WriteLine("\n=== PracticeDB ===");
             Console.WriteLine("1. Список сотрудников (задание 28)");
+            Console.WriteLine("2. Добавить сотрудника (задание 29)");
             Console.WriteLine("0. Выход");
             Console.Write("Выберите действие: ");
             string? choice = Console.ReadLine();
@@ -25,9 +28,35 @@ internal class Program
                 return;
 
             if (choice == "1")
+            {
                 await ShowEmployees();
+            }
+            else if (choice == "2")
+            {
+                Console.Write("Имя: ");
+                string name = (Console.ReadLine() ?? "").Trim();
+
+                Console.Write("Зарплата: ");
+                string salaryText = (Console.ReadLine() ?? "").Trim().Replace(',', '.');
+                if (!decimal.TryParse(salaryText, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal salary))
+                {
+                    Console.WriteLine("Некорректная зарплата.");
+                    continue;
+                }
+
+                Console.Write("Номер отдела: ");
+                if (!int.TryParse(Console.ReadLine(), out int departmentId))
+                {
+                    Console.WriteLine("Некорректный номер отдела.");
+                    continue;
+                }
+
+                await AddEmployee(name, salary, departmentId);
+            }
             else
+            {
                 Console.WriteLine("Нет такого пункта.");
+            }
         }
     }
 
@@ -51,6 +80,88 @@ internal class Program
 
             if (!found)
                 Console.WriteLine("Сотрудников нет.");
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Ошибка SQL: " + ex.Message);
+        }
+    }
+
+    private static async Task AddEmployee(string name, decimal salary, int departmentId)
+    {
+        if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
+        {
+            Console.WriteLine("Имя должно содержать от 1 до 100 символов.");
+            return;
+        }
+        if (salary <= 0 || salary >= 100000000m || decimal.Round(salary, 2) != salary)
+        {
+            Console.WriteLine("Некорректная сумма зарплаты.");
+            return;
+        }
+        if (departmentId <= 0)
+        {
+            Console.WriteLine("Некорректный номер отдела.");
+            return;
+        }
+
+        try
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            // В учебной базе имя не уникально, поэтому проверяем повтор сами.
+            using (var check = new SqlCommand(
+                "SELECT COUNT(*) FROM Employees WHERE EmployeeName = @name", connection))
+            {
+                check.Parameters.Add("@name", SqlDbType.NVarChar, 100).Value = name;
+                int count = Convert.ToInt32(await check.ExecuteScalarAsync());
+                if (count > 0)
+                {
+                    Console.WriteLine("Сотрудник с таким именем уже есть.");
+                    return;
+                }
+            }
+
+            int employeeId;
+            using (var insert = new SqlCommand(@"
+                INSERT INTO Employees (EmployeeName, Salary, HireDate, DepartmentId)
+                OUTPUT INSERTED.EmployeeId
+                VALUES (@name, @salary, CAST(GETDATE() AS DATE), @deptId)", connection))
+            {
+                insert.Parameters.Add("@name", SqlDbType.NVarChar, 100).Value = name;
+                var salaryParam = insert.Parameters.Add("@salary", SqlDbType.Decimal);
+                salaryParam.Precision = 10;
+                salaryParam.Scale = 2;
+                salaryParam.Value = salary;
+                insert.Parameters.Add("@deptId", SqlDbType.Int).Value = departmentId;
+
+                employeeId = Convert.ToInt32(await insert.ExecuteScalarAsync());
+            }
+
+            using var verify = new SqlCommand(@"
+                SELECT EmployeeId, EmployeeName, Salary, DepartmentId
+                FROM Employees
+                WHERE EmployeeId = @id", connection);
+            verify.Parameters.Add("@id", SqlDbType.Int).Value = employeeId;
+
+            using var reader = await verify.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                Console.WriteLine("Добавлен сотрудник:");
+                Console.WriteLine($"ID: {reader.GetInt32(0)}");
+                Console.WriteLine($"Имя: {reader.GetString(1)}");
+                Console.WriteLine($"Зарплата: {reader.GetDecimal(2):F2}");
+                Console.WriteLine($"Отдел: {reader.GetInt32(3)}");
+            }
+        }
+        catch (SqlException ex) when (ex.Number == 547)
+        {
+            Console.WriteLine("Ошибка: такого отдела нет.");
+        }
+        catch (SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
+        {
+            Console.WriteLine("Ошибка: дубликат записи.");
         }
         catch (SqlException ex)
         {

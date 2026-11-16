@@ -111,12 +111,13 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 | 26 | CASE: категории зарплаты и стажа | Готово |
 | 27 | Работа с датами: DATEADD, DATEDIFF, FORMAT | Готово |
 | 28 | C# + SQL: подключение и SELECT | Готово |
+| 29 | C# + SQL: параметризованный INSERT | Готово |
 
 ### Как запустить
 
 1. Открой `database/init.sql` в SQL Server Management Studio (SSMS) и выполни весь скрипт.
 2. Открой `database/sql-notes.md` и выполни запросы из заданий 1–27 в SSMS.
-3. Для задания 28 задай переменную окружения `PRACTICE_DB_CONNECTION` со своей строкой подключения к SQL Server.
+3. Для заданий 28–29 задай переменную окружения `PRACTICE_DB_CONNECTION` со своей строкой подключения к SQL Server.
 4. Запусти `dotnet run --project database/PracticeDbApp/PracticeDbApp.csproj`.
 
 **Внимание:** `init.sql` каждый раз пересоздаёт базу `PracticeDB` и удаляет все старые данные внутри неё.

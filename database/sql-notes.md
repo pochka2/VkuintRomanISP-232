@@ -1506,3 +1506,39 @@ ORDER BY EmployeeId;
 ### Вывод
 
 Через `SqlConnection` C#-приложение соединяется с SQL Server, а `SqlDataReader` читает результаты запроса по строкам.
+
+
+## Task 29 — C# + SQL: параметризованный INSERT
+
+### SQL
+
+```sql
+-- Параметры передаются через SqlCommand из C#, а не подставляются в текст.
+SELECT COUNT(*)
+FROM Employees
+WHERE EmployeeName = @name;
+
+INSERT INTO Employees (EmployeeName, Salary, HireDate, DepartmentId)
+OUTPUT INSERTED.EmployeeId
+VALUES (@name, @salary, CAST(GETDATE() AS DATE), @deptId);
+
+SELECT EmployeeId, EmployeeName, Salary, DepartmentId
+FROM Employees
+WHERE EmployeeId = @id;
+```
+
+### C#
+
+В `database/PracticeDbApp/Program.cs` метод `AddEmployee(string name, decimal salary, int departmentId)` использует параметры `@name`, `@salary`, `@deptId`. После вставки читает добавленную запись по `EmployeeId`.
+
+Перед вставкой проверяет пустое имя и повтор имени. `SqlException` обрабатывает отдельно ошибку внешнего ключа и ошибки дублирования ключей.
+
+### Результат
+
+Пример ввода: `Тестовый сотрудник`, зарплата `50000`, отдел `1`. После успешной вставки ожидается строка с новым `EmployeeId`, именем, зарплатой и отделом. При повторном вводе того же имени программа сообщает, что сотрудник уже существует. При несуществующем отделе сообщает об ошибке внешнего ключа.
+
+Это ожидаемое поведение кода; фактическую вставку нужно проверить при подключении к SQL Server.
+
+### Вывод
+
+Параметры `SqlCommand` передают значения отдельно от SQL-запроса. Это позволяет безопасно добавлять сотрудников без конкатенации пользовательского ввода с SQL.
