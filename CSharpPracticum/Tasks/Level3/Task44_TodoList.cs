@@ -28,7 +28,7 @@ public class Task44_TodoList : ITask
         TaskService service;
         try
         {
-            string path = Path.Combine(AppContext.BaseDirectory, "tasks.json");
+            string path = Path.Combine(Environment.CurrentDirectory, "tasks.json");
             service = new TaskService(new TaskRepository(path));
         }
         catch (Exception ex) when (ex is IOException or JsonException or UnauthorizedAccessException)
