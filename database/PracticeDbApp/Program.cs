@@ -20,6 +20,7 @@ internal class Program
             Console.WriteLine("\n=== PracticeDB ===");
             Console.WriteLine("1. Список сотрудников (задание 28)");
             Console.WriteLine("2. Добавить сотрудника (задание 29)");
+            Console.WriteLine("3. Отчёт по отделам (задание 30)");
             Console.WriteLine("0. Выход");
             Console.Write("Выберите действие: ");
             string? choice = Console.ReadLine();
@@ -52,6 +53,10 @@ internal class Program
                 }
 
                 await AddEmployee(name, salary, departmentId);
+            }
+            else if (choice == "3")
+            {
+                await ShowDepartmentReport();
             }
             else
             {
@@ -168,4 +173,47 @@ internal class Program
             Console.WriteLine("Ошибка SQL: " + ex.Message);
         }
     }
+
+    private static async Task ShowDepartmentReport()
+    {
+        try
+        {
+            using var connection = new SqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            using var command = new SqlCommand(@"
+                SELECT d.DepartmentName,
+                       COUNT(e.EmployeeId) AS EmpCount,
+                       AVG(e.Salary) AS AvgSalary
+                FROM Departments d
+                LEFT JOIN Employees e ON d.DepartmentId = e.DepartmentId
+                GROUP BY d.DepartmentName
+                ORDER BY d.DepartmentName", connection);
+            using var reader = await command.ExecuteReaderAsync();
+
+            Console.WriteLine(string.Format("{0,-20} | {1,12} | {2,16}",
+                "Отдел", "Сотрудников", "Средняя зарплата"));
+            Console.WriteLine(new string('-', 55));
+
+            bool found = false;
+            while (await reader.ReadAsync())
+            {
+                found = true;
+                string department = reader.GetString(0);
+                int count = reader.GetInt32(1);
+                string average = reader.IsDBNull(2) ? "N/A" : reader.GetDecimal(2).ToString("F2");
+
+                Console.WriteLine(string.Format("{0,-20} | {1,12} | {2,16}",
+                    department, count, average));
+            }
+
+            if (!found)
+                Console.WriteLine("Отделов нет.");
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine("Ошибка SQL: " + ex.Message);
+        }
+    }
+
 }
