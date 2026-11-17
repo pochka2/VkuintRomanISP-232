@@ -61,7 +61,7 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 | 45 | Библиотека и юнит-тесты | Готово |
 | 46 | Git: stash | Готово |
 | 47 | Git: rebase -i | Готово |
-| 48 | Git: теги | В работе |
+| 48 | Git: теги | Готово |
 | 49 | Git: reflog | Готово |
 | 50 | Git: bisect | Готово |
 
