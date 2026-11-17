@@ -1542,3 +1542,41 @@ WHERE EmployeeId = @id;
 ### Вывод
 
 Параметры `SqlCommand` передают значения отдельно от SQL-запроса. Это позволяет безопасно добавлять сотрудников без конкатенации пользовательского ввода с SQL.
+
+## Task 30 — C# + SQL: мини-отчёт по отделам
+
+### SQL
+
+```sql
+SELECT
+    d.DepartmentName,
+    COUNT(e.EmployeeId) AS EmpCount,
+    AVG(e.Salary) AS AvgSalary
+FROM Departments d
+LEFT JOIN Employees e ON d.DepartmentId = e.DepartmentId
+GROUP BY d.DepartmentName
+ORDER BY d.DepartmentName;
+```
+
+### C#
+
+В `database/PracticeDbApp/Program.cs` добавлен пункт меню `3. Отчёт по отделам`. Метод `ShowDepartmentReport` открывает соединение с `PracticeDB` и выполняет запрос через `SqlCommand` и `ExecuteReaderAsync`.
+
+Таблица выводится с выравниванием. Для отдела без сотрудников средняя зарплата отображается как `N/A`. Если в таблице `Departments` нет записей, выводится `Отделов нет.`. Ошибки SQL обрабатываются через `SqlException`.
+
+### Результат
+
+Ожидаемый отчёт после запуска `database/init.sql` (до изменений данных другими заданиями):
+
+| DepartmentName | EmpCount | AvgSalary |
+| --- | ---: | ---: |
+| Аналитика | 3 | 57000.00 |
+| Менеджмент | 1 | 90000.00 |
+| Разработка | 4 | 60000.00 |
+| Тестирование | 2 | 44000.00 |
+
+Числа могут измениться после добавления сотрудников в задании 29. Для проверки на SQL Server необходимо выполнить `init.sql`, задать `PRACTICE_DB_CONNECTION` и запустить приложение.
+
+### Вывод
+
+`LEFT JOIN` оставляет отделы даже без сотрудников. `COUNT(e.EmployeeId)` считает их количество, `AVG(e.Salary)` — среднюю зарплату; `GROUP BY` объединяет строки по отделам.
