@@ -10,3 +10,4 @@ TestResults/
 *.bak
 .env
 appsettings.Development.json
+tasks.json
