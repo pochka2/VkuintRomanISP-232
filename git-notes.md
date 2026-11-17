@@ -181,39 +181,47 @@ bff8014 docs: task 47 - step 1
 
 ## Task 48 — git tags
 
-Аннотированный тег создан и проверен только в отдельном локальном учебном репозитории.
+Аннотированный тег `v1.0.0` создан на коммите `8bd3141` в ветке `main` и отправлен на GitHub 17.11.2026.
 
 ### Commands
 
 ```bash
-git tag -a v1.0.0 -m "Release v1.0.0"
-git tag
-git show v1.0.0
-```
-
-### Output (локальный пример)
-
-```text
-v1.0.0
-tag v1.0.0
-Tagger: Practicum Student <student@localhost>
-
-Release v1.0.0
-commit fa1604c4d25069f236bd40451be3d797cf2e1057
-```
-
-**В основном GitHub-репозитории тег v1.0.0 пока отсутствует.** Для завершения задания в нём нужно выполнить:
-
-```bash
-git switch main
-git pull
 git tag -a v1.0.0 -m "Release v1.0.0"
 git push origin v1.0.0
 git tag
 git show v1.0.0
 ```
 
-После публикации сюда нужно сохранить вывод `git tag` и `git show v1.0.0` из основного репозитория.
+### Output (git push)
+
+```text
+To https://github.com/pochka2/VkuintRomanISP-232.git
+ * [new tag]         v1.0.0 -> v1.0.0
+```
+
+### Output (git tag)
+
+```text
+v1.0.0
+```
+
+### Output (git show v1.0.0, начало вывода)
+
+```text
+tag v1.0.0
+Tagger: pochkaprodal <pochka2548@gmail.com>
+Date:   Tue Nov 17 15:07:59 2026 +0300
+
+Release v1.0.0
+
+commit 8bd314106c8aabfba5b8f76febb24faf219e58f9 (HEAD -> main, tag: v1.0.0, origin/main, origin/HEAD)
+Author: pochka2 <aidad3033@gmail.com>
+Date:   Tue Nov 17 13:51:28 2026 +0300
+
+    docs: record measured SQL task 20 execution plans and IO (#20)
+```
+
+Тег проверен локально и в удалённом репозитории: https://github.com/pochka2/VkuintRomanISP-232/releases/tag/v1.0.0
 
 ## Task 49 — git reflog
 
