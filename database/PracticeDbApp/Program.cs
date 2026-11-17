@@ -90,6 +90,10 @@ internal class Program
         {
             Console.WriteLine("Ошибка SQL: " + ex.Message);
         }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        {
+            Console.WriteLine("Ошибка подключения: " + ex.Message);
+        }
     }
 
     private static async Task AddEmployee(string name, decimal salary, int departmentId)
@@ -172,6 +176,10 @@ internal class Program
         {
             Console.WriteLine("Ошибка SQL: " + ex.Message);
         }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        {
+            Console.WriteLine("Ошибка подключения: " + ex.Message);
+        }
     }
 
     private static async Task ShowDepartmentReport()
@@ -213,6 +221,10 @@ internal class Program
         catch (SqlException ex)
         {
             Console.WriteLine("Ошибка SQL: " + ex.Message);
+        }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        {
+            Console.WriteLine("Ошибка подключения: " + ex.Message);
         }
     }
 
