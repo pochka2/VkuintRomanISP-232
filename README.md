@@ -114,17 +114,12 @@ dotnet run --project CSharpPracticum/CSharpPracticum.csproj
 | 29 | C# + SQL: параметризованный INSERT | Готово |
 | 30 | C# + SQL: мини-отчёт по отделам | Готово |
 
-### Как запустить
+### Запуск SQL
 
-1. Открой `database/init.sql` в SQL Server Management Studio (SSMS) и выполни весь скрипт.
-2. Открой `database/sql-notes.md` и выполни запросы из заданий 1–27 в SSMS.
-3. Для заданий 28–30 задай переменную окружения `PRACTICE_DB_CONNECTION` со своей строкой подключения к SQL Server.
-4. Запусти `dotnet run --project database/PracticeDbApp/PracticeDbApp.csproj`.
+1. В SSMS выполните `database/init.sql` (скрипт заново создаёт `PracticeDB`).
+2. Запросы SQL №1–27 находятся в `database/sql-notes.md`.
+3. Для №28–30 задайте переменную окружения `PRACTICE_DB_CONNECTION` и запустите:
 
-**Внимание:** `init.sql` каждый раз пересоздаёт базу `PracticeDB` и удаляет все старые данные внутри неё.
-
-В заданиях №16–17 изменения отменяются через `ROLLBACK`. В №18 выполняется `COMMIT`, который сохраняет изменение зарплаты. Для возврата к исходным данным нужно заново запустить `init.sql`.
-
-Измерения SQL №20 записаны в `database/sql-notes.md`. На 10 сотрудниках SQL Server выбрал `Clustered Index Scan` и выполнил два логических чтения как до, так и после создания индексов.
-
-SQL-практикум не меняет задания C#. Для дальнейших заданий по БД используется эта же база.
+```bash
+dotnet run --project database/PracticeDbApp/PracticeDbApp.csproj
+```
