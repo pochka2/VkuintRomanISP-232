@@ -195,8 +195,8 @@ internal class Program
                        AVG(e.Salary) AS AvgSalary
                 FROM Departments d
                 LEFT JOIN Employees e ON d.DepartmentId = e.DepartmentId
-                GROUP BY d.DepartmentName
-                ORDER BY d.DepartmentName", connection);
+                GROUP BY d.DepartmentId, d.DepartmentName
+                ORDER BY d.DepartmentName, d.DepartmentId", connection);
             using var reader = await command.ExecuteReaderAsync();
 
             Console.WriteLine(string.Format("{0,-20} | {1,12} | {2,16}",

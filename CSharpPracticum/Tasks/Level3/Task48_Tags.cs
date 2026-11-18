@@ -24,7 +24,7 @@ public class Task48_Tags : ITask
     /// <summary>Выполняет задание.</summary>
     public void Run()
     {
-        Console.WriteLine("Для завершения задания нужен тег v1.0.0 на GitHub.");
+        Console.WriteLine("Аннотированный тег v1.0.0 опубликован на GitHub.");
         Console.WriteLine("Команды и локальная проверка: git-notes.md");
     }
 }
