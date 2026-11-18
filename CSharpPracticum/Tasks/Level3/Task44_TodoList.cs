@@ -80,9 +80,14 @@ public class Task44_TodoList : ITask
                         break;
                 }
             }
-            catch (Exception ex) when (ex is ArgumentException or IOException or UnauthorizedAccessException)
+            catch (ArgumentException ex)
             {
                 Console.WriteLine("Ошибка: " + ex.Message);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                Console.WriteLine("Не удалось сохранить задачи: " + ex.Message);
+                return;
             }
         }
     }
@@ -145,7 +150,16 @@ public class Task44_TodoList : ITask
 
         private void Save()
         {
-            File.WriteAllText(path, JsonSerializer.Serialize(tasks));
+            string temporaryPath = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+            try
+            {
+                File.WriteAllText(temporaryPath, JsonSerializer.Serialize(tasks));
+                File.Move(temporaryPath, path, overwrite: true);
+            }
+            finally
+            {
+                if (File.Exists(temporaryPath)) File.Delete(temporaryPath);
+            }
         }
     }
 

@@ -1572,13 +1572,13 @@ ORDER BY EmployeeId;
 
 ```sql
 -- Параметры передаются через SqlCommand из C#, а не подставляются в текст.
-SELECT COUNT(*)
-FROM Employees
-WHERE EmployeeName = @name;
-
 INSERT INTO Employees (EmployeeName, Salary, HireDate, DepartmentId)
 OUTPUT INSERTED.EmployeeId
-VALUES (@name, @salary, CAST(GETDATE() AS DATE), @deptId);
+SELECT @name, @salary, CAST(GETDATE() AS DATE), @deptId
+WHERE NOT EXISTS (
+    SELECT 1 FROM Employees WITH (UPDLOCK, HOLDLOCK)
+    WHERE EmployeeName = @name
+);
 
 SELECT EmployeeId, EmployeeName, Salary, DepartmentId
 FROM Employees
@@ -1589,7 +1589,7 @@ WHERE EmployeeId = @id;
 
 В `database/PracticeDbApp/Program.cs` метод `AddEmployee(string name, decimal salary, int departmentId)` использует параметры `@name`, `@salary`, `@deptId`. После вставки читает добавленную запись по `EmployeeId`.
 
-Перед вставкой проверяет пустое имя и повтор имени. `SqlException` обрабатывает отдельно ошибку внешнего ключа и ошибки дублирования ключей.
+Пустое имя проверяется в приложении. Проверка повтора и вставка выполняются одним SQL-запросом. Блокировки удерживаются до завершения запроса, поэтому два одновременных запуска не добавят одно имя дважды. `SqlException` обрабатывает отдельно ошибку внешнего ключа и ошибки дублирования ключей.
 
 ### Результат
 
