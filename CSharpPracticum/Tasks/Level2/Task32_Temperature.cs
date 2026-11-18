@@ -41,7 +41,8 @@ public class Task32_Temperature : ITask
             get => celsius;
             set
             {
-                if (value < -273.15) throw new ArgumentOutOfRangeException(nameof(value), "Ниже абсолютного нуля нельзя.");
+                if (!double.IsFinite(value) || value < -273.15)
+                    throw new ArgumentOutOfRangeException(nameof(value), "Температура должна быть конечным числом не ниже −273,15 °C.");
                 celsius = value;
             }
         }
