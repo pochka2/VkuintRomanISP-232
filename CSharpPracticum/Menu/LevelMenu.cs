@@ -34,8 +34,8 @@ public static class LevelMenu
             Console.WriteLine("Требования:");
             foreach (string requirement in taskToRun.Requirements)
                 Console.WriteLine("- " + requirement);
-            Console.WriteLine("Ожидаемый результат: " + taskToRun.ExpectedResult);
-            Console.WriteLine("Подсказка: " + taskToRun.Hint);
+            Console.WriteLine("Ожидаемый результат: " + ConsoleHelper.GetExpectedResult(number));
+            Console.WriteLine("Подсказка: " + ConsoleHelper.GetHint(number));
             Console.WriteLine(new string('-', 50));
             try
             {

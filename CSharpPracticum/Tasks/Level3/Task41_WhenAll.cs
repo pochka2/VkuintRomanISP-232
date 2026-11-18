@@ -17,10 +17,6 @@ public class Task41_WhenAll : ITask
         "Последовательный await и Task.WhenAll",
         "Stopwatch и сравнение результатов",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Результаты совпадают, параллельный запуск быстрее.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Task.WhenAll ждёт все задачи одновременно.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

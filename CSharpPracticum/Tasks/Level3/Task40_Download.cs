@@ -16,10 +16,6 @@ public class Task40_Download : ITask
         "Ошибка ArgumentException для пустой ссылки",
         "Успешный и ошибочный вызовы",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Скачивание работает, ошибка обрабатывается.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Используй await внутри try/catch.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

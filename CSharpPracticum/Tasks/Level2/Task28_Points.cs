@@ -16,10 +16,6 @@ public class Task28_Points : ITask
         "Equals(object) и GetHashCode",
         "Дубликаты не увеличивают HashSet",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Одинаковые точки равны, дубликаты не добавляются.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Для одинаковых x и y должен получаться одинаковый хеш.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

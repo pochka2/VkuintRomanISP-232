@@ -16,10 +16,6 @@ public class Task43_Exceptions : ITask
         "Собственный CustomException",
         "Несколько catch и finally",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Каждая ошибка обработана, finally выполняется всегда.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Сначала укажи конкретные catch, затем общий.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

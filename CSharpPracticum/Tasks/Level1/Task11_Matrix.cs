@@ -16,10 +16,6 @@ public class Task11_Matrix : ITask
         "Случайные значения",
         "Сумма диагонали в одном for",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Выведена матрица и сумма её диагонали.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Суммируй matrix[i, i].";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

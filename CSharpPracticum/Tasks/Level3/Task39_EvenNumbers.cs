@@ -16,10 +16,6 @@ public class Task39_EvenNumbers : ITask
         "Без промежуточного списка",
         "Показать ленивое выполнение",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Чётные числа выводятся по одному.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Код внутри генератора выполняется при foreach.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

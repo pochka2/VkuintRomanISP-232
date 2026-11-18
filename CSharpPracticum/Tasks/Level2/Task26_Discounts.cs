@@ -16,10 +16,6 @@ public class Task26_Discounts : ITask
         "Нет скидки, VIP 10%, промо 20%",
         "PriceCalculator принимает стратегию",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Цены с разными скидками посчитаны правильно.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Калькулятор должен работать с любым видом скидки.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

@@ -16,10 +16,6 @@ public class Task36_Duplicates : ITask
         "GroupBy и Where",
         "Два отдельных метода",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Оба способа находят одинаковые дубликаты.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "HashSet помогает запоминать встреченные числа.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

@@ -16,10 +16,6 @@ public class Task49_Reflog : ITask
         "Найти коммит в git reflog",
         "Восстановить коммит и сохранить вывод"
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Коммит найден и восстановлен, история сохранена.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Результаты команд записаны в git-notes.md.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

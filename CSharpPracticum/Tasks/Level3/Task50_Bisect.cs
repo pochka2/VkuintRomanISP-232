@@ -16,10 +16,6 @@ public class Task50_Bisect : ITask
         "Намеренно сломать функцию и найти первый плохой коммит",
         "Отметки good/bad, bisect reset и вывод команд"
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Первый ошибочный коммит найден, поиск завершён.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Команды и найденный коммит указаны в git-notes.md.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

@@ -16,10 +16,6 @@ public class Task16_StringMethods : ITask
         "IsPalindrome, WordCount, ReverseString",
         "Примеры на нескольких строках",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Три метода работают для нескольких строк.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Первый параметр метода расширения пишется this string.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

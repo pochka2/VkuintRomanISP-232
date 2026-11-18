@@ -16,10 +16,6 @@ public class Task23_Nullable : ITask
         "??, ?., HasValue и Value",
         "Найденный и отсутствующий ключ",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Все случаи с null обработаны без ошибки.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Значение Value читаем только после проверки HasValue.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

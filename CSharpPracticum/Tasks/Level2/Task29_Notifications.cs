@@ -16,10 +16,6 @@ public class Task29_Notifications : ITask
         "Email, Sms, Push",
         "NotificationFactory.Create(NotificationType)",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Все три вида уведомлений работают.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "В фабрике удобно использовать switch.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

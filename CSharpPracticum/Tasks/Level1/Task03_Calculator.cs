@@ -15,10 +15,6 @@ public class Task03_Calculator : ITask
         "Операции + - * / через switch",
         "Обработать деление на ноль и неверный ввод",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Все четыре действия работают, деление на ноль обработано.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Используй switch и TryParse.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

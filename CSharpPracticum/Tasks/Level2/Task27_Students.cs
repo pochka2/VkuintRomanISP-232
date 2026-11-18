@@ -16,10 +16,6 @@ public class Task27_Students : ITask
         "IComparer<Student> по имени",
         "Обе сортировки List<Student>",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Студенты отсортированы по оценкам и по имени.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "В CompareTo можно сравнить AverageGrade в обратном порядке.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

@@ -16,10 +16,6 @@ public class Task32_Temperature : ITask
         "ArgumentOutOfRangeException",
         "Fahrenheit только get",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Температура проверяется и переводится в Фаренгейты.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Fahrenheit = Celsius * 9 / 5 + 32.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

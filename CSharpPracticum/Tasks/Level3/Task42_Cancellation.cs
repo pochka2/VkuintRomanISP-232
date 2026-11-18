@@ -16,10 +16,6 @@ public class Task42_Cancellation : ITask
         "10 задержек по 500 мс",
         "Отмена через 2 секунды и try/catch",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Операция отменяется без падения программы.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Передай токен в Task.Delay.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

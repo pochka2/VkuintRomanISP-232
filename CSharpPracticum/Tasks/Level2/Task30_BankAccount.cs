@@ -16,10 +16,6 @@ public class Task30_BankAccount : ITask
         "Deposit и Withdraw",
         "Собственное InsufficientFundsException",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Деньги не уходят в минус, ошибка обрабатывается.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Перед снятием проверь баланс.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

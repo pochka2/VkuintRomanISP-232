@@ -17,10 +17,6 @@ public class Task19_StackQueue : ITask
         "Удвоение массива",
         "Исключение для пустого",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Стек и очередь работают, пустые коллекции не ломают программу.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "У очереди удобно хранить индекс первого элемента.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

@@ -18,10 +18,6 @@ public class Task17_StringBuilder : ITask
         "Stopwatch",
         "Сравнить результат и время",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Строки совпадают, время и разница выведены.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "StringBuilder не создаёт новую строку на каждом сложении.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

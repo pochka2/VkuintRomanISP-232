@@ -17,10 +17,6 @@ public class Task38_Collections : ITask
         "1000 вставок в середину",
         "Замер времени через Stopwatch",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Выведено время вставки для обеих коллекций.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "У LinkedList можно вставлять после найденного узла.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

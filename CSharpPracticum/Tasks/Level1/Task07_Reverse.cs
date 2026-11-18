@@ -15,10 +15,6 @@ public class Task07_Reverse : ITask
         "Без LINQ и Array.Reverse",
         "Цикл for с конца",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Строка перевёрнута, даже если она пустая.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Можно добавлять символы в результат по одному.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

@@ -16,10 +16,6 @@ public class Task46_Stash : ITask
         "Переключение ветки",
         "git stash pop и вывод в git-notes.md"
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Изменения восстановлены, вывод записан в git-notes.md.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Команды и результат находятся в git-notes.md.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

@@ -16,10 +16,6 @@ public class Task25_Shapes : ITask
         "Circle, Rectangle, Triangle",
         "Пять фигур, сортировка по площади",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Фигуры отсортированы по площади.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Для треугольника можно применить формулу Герона.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

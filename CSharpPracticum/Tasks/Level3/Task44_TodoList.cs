@@ -17,10 +17,6 @@ public class Task44_TodoList : ITask
         "Добавление, просмотр, выполнение и удаление",
         "Сохранение в tasks.json",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Список задач сохраняется между запусками.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Для сохранения используй System.Text.Json.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

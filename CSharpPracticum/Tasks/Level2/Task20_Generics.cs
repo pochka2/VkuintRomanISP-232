@@ -16,10 +16,6 @@ public class Task20_Generics : ITask
         "Max<T> с IComparable<T>",
         "Примеры int, string, double",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Swap и Max работают для трёх типов.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Для Max можно вызвать CompareTo.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

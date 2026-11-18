@@ -16,10 +16,6 @@ public class Task13_WordCounter : ITask
         "Убрать знаки пунктуации и регистр",
         "Отсортировать по частоте",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Все слова посчитаны по убыванию частоты.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Раздели строку через Split и используй OrderByDescending.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

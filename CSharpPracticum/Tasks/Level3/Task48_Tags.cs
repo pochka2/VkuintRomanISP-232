@@ -16,10 +16,6 @@ public class Task48_Tags : ITask
         "git push origin v1.0.0",
         "git tag и git show в git-notes.md"
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Тег v1.0.0 должен появиться на GitHub.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Для публикации тега используй git push origin v1.0.0.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

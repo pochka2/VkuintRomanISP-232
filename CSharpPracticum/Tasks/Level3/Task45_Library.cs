@@ -16,10 +16,6 @@ public class Task45_Library : ITask
         "Выдача, возврат и лимит в 3 книги",
         "Обработка ошибок и юнит-тесты",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Выдача и возврат работают, ошибки обрабатываются.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Перед выдачей проверь доступность и количество книг.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

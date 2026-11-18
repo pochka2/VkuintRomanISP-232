@@ -15,10 +15,6 @@ public class Task05_Multiplication : ITask
         "Два вложенных for",
         "Ровные столбцы",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Напечатана ровная таблица 10 на 10.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Для выравнивания пригодится {число,4}.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

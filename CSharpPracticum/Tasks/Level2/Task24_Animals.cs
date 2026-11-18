@@ -16,10 +16,6 @@ public class Task24_Animals : ITask
         "Dog, Cat, Bird",
         "List<Animal> и Bird.Fly",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Каждое животное издаёт свой звук.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Все животные имеют метод MakeSound, но звуки разные.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

@@ -16,10 +16,6 @@ public class Task06_DigitSum : ITask
         "Арифметика через while",
         "Отрицательные числа по модулю",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Оба способа дают одинаковую сумму цифр.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Для int.MinValue безопаснее сначала перевести число в long.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

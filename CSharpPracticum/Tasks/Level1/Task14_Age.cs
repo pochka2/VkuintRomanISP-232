@@ -16,10 +16,6 @@ public class Task14_Age : ITask
         "Правильный учёт ещё не наступившего дня рождения",
         "Некорректная дата не роняет программу",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Возраст показан в годах, месяцах и днях.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Проверяй, что дата не в будущем.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

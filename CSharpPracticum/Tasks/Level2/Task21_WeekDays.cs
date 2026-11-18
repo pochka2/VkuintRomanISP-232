@@ -16,10 +16,6 @@ public class Task21_WeekDays : ITask
         "IsWeekend",
         "GetRussianName",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Все семь дней выведены с признаком выходного.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Суббота и воскресенье — выходные.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

@@ -16,10 +16,6 @@ public class Task04_Parity : ITask
         "Тернарный оператор",
         "Два отдельных метода",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Оба способа правильно определяют чётность.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Оба метода должны вернуть результат.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()

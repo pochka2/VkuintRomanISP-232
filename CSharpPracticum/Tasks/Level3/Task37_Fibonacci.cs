@@ -17,10 +17,6 @@ public class Task37_Fibonacci : ITask
         "Замер времени для N от 30 до 35",
         "Вывести оба времени и разницу",
     };
-    /// <summary>Ожидаемый результат.</summary>
-    public string ExpectedResult => "Результаты совпадают, мемоизация быстрее.";
-    /// <summary>Подсказка.</summary>
-    public string Hint => "Сохраняй уже вычисленные числа в Dictionary.";
 
     /// <summary>Выполняет задание.</summary>
     public void Run()
