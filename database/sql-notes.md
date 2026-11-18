@@ -1033,6 +1033,61 @@ ORDER BY name;
 
 До и после создания индексов запрос возвращал одних и тех же трёх сотрудников. На таблице из 10 сотрудников SQL Server продолжил сканировать кластерный индекс первичного ключа. Дополнительные индексы для этого запроса не использовались; число логических чтений не изменилось. На небольших таблицах такой результат допустим.
 
+### Проверка на 10 010 строках
+
+Во временную таблицу скопированы 10 исходных сотрудников и добавлены 10 000 сотрудников второго отдела. Фильтр по первому отделу по-прежнему возвращает три строки. Дополнительные записи существуют только во временной таблице.
+
+```sql
+CREATE TABLE #Employees (
+    EmployeeId INT IDENTITY PRIMARY KEY,
+    EmployeeName NVARCHAR(100) NOT NULL,
+    Salary DECIMAL(10,2) NOT NULL,
+    HireDate DATE NOT NULL,
+    DepartmentId INT NOT NULL
+);
+INSERT INTO #Employees (EmployeeName, Salary, HireDate, DepartmentId)
+SELECT EmployeeName, Salary, HireDate, DepartmentId FROM dbo.Employees;
+;WITH Digits(n) AS (
+    SELECT n FROM (VALUES (0),(1),(2),(3),(4),(5),(6),(7),(8),(9)) AS v(n)
+)
+INSERT INTO #Employees (EmployeeName, Salary, HireDate, DepartmentId)
+SELECT N'Тест', 40000, '2020-01-01', 2
+FROM Digits a CROSS JOIN Digits b CROSS JOIN Digits c CROSS JOIN Digits d;
+GO
+SET STATISTICS IO ON;
+SELECT EmployeeName, Salary FROM #Employees WHERE DepartmentId = 1 AND Salary > 50000;
+SET STATISTICS IO OFF;
+GO
+SET SHOWPLAN_TEXT ON;
+GO
+SELECT EmployeeName, Salary FROM #Employees WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET SHOWPLAN_TEXT OFF;
+GO
+CREATE INDEX IX_Employees_DepartmentId ON #Employees(DepartmentId);
+CREATE INDEX IX_Employees_Salary ON #Employees(Salary);
+GO
+SET STATISTICS IO ON;
+SELECT EmployeeName, Salary FROM #Employees WHERE DepartmentId = 1 AND Salary > 50000;
+SET STATISTICS IO OFF;
+GO
+SET SHOWPLAN_TEXT ON;
+GO
+SELECT EmployeeName, Salary FROM #Employees WHERE DepartmentId = 1 AND Salary > 50000;
+GO
+SET SHOWPLAN_TEXT OFF;
+GO
+DROP TABLE #Employees;
+```
+
+SQL Server 2022, результаты запуска 18.11.2026:
+
+| Измерение | До создания индексов | После создания индексов |
+| --- | --- | --- |
+| Логические чтения | 53 | 10 |
+| Строк в результате | 3 | 3 |
+| План | Clustered Index Scan | Index Seek по IX_Employees_DepartmentId, затем Nested Loops и поиск по кластерному ключу |
+
 ### Вывод
 
 Индекс помогает находить записи по столбцу, но на очень маленькой таблице может не использоваться. `SHOWPLAN_TEXT` показывает выбранный план, а `STATISTICS IO` — число логических чтений.
