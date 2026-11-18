@@ -30,10 +30,10 @@ public class Task39_EvenNumbers : ITask
 
     private static IEnumerable<int> GetEvenNumbers(int max)
     {
-        for (int i = 2; i <= max; i += 2)
+        for (long i = 2; i <= max; i += 2)
         {
             Console.WriteLine("Генератор: " + i);
-            yield return i;
+            yield return (int)i;
         }
     }
 }
