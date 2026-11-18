@@ -16,11 +16,3 @@ public interface ITask
     /// <summary>Запуск задания.</summary>
     void Run();
 }
-
- 
-/// <summary>Задание с асинхронным запуском.</summary>
-public interface IAsyncTask : ITask
-{
-    /// <summary>Асинхронный запуск задания.</summary>
-    Task RunAsync();
-}

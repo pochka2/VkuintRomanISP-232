@@ -3,7 +3,7 @@ using CSharpPracticum.Common;
 namespace CSharpPracticum.Tasks.Level3;
 
 /// <summary>Задание 42. Отмена операции.</summary>
-public class Task42_Cancellation : IAsyncTask
+public class Task42_Cancellation : ITask
 {
     /// <summary>Название задания.</summary>
     public string Title => "Отмена операции";

@@ -3,7 +3,7 @@ using CSharpPracticum.Common;
 namespace CSharpPracticum.Tasks.Level3;
 
 /// <summary>Задание 40. Async и обработка ошибок.</summary>
-public class Task40_Download : IAsyncTask
+public class Task40_Download : ITask
 {
     /// <summary>Название задания.</summary>
     public string Title => "Async и обработка ошибок";

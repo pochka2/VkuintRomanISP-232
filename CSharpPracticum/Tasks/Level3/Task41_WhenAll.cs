@@ -4,7 +4,7 @@ using CSharpPracticum.Common;
 namespace CSharpPracticum.Tasks.Level3;
 
 /// <summary>Задание 41. Task.WhenAll.</summary>
-public class Task41_WhenAll : IAsyncTask
+public class Task41_WhenAll : ITask
 {
     /// <summary>Название задания.</summary>
     public string Title => "Task.WhenAll";
