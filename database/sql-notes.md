@@ -1572,13 +1572,13 @@ ORDER BY EmployeeId;
 
 ```sql
 -- Параметры передаются через SqlCommand из C#, а не подставляются в текст.
+SELECT COUNT(*)
+FROM Employees
+WHERE EmployeeName = @name;
+
 INSERT INTO Employees (EmployeeName, Salary, HireDate, DepartmentId)
 OUTPUT INSERTED.EmployeeId
-SELECT @name, @salary, CAST(GETDATE() AS DATE), @deptId
-WHERE NOT EXISTS (
-    SELECT 1 FROM Employees WITH (UPDLOCK, HOLDLOCK)
-    WHERE EmployeeName = @name
-);
+VALUES (@name, @salary, CAST(GETDATE() AS DATE), @deptId);
 
 SELECT EmployeeId, EmployeeName, Salary, DepartmentId
 FROM Employees
@@ -1589,13 +1589,13 @@ WHERE EmployeeId = @id;
 
 В `database/PracticeDbApp/Program.cs` метод `AddEmployee(string name, decimal salary, int departmentId)` использует параметры `@name`, `@salary`, `@deptId`. После вставки читает добавленную запись по `EmployeeId`.
 
-Пустое имя проверяется в приложении. Проверка повтора и вставка выполняются одним SQL-запросом. Блокировки удерживаются до завершения запроса, поэтому два одновременных запуска не добавят одно имя дважды. `SqlException` обрабатывает отдельно ошибку внешнего ключа и ошибки дублирования ключей.
+Перед вставкой проверяет пустое имя и повтор имени. `SqlException` обрабатывает отдельно ошибку внешнего ключа и ошибки дублирования ключей.
 
 ### Результат
 
 Пример ввода: `Тестовый сотрудник`, зарплата `50000`, отдел `1`. После успешной вставки ожидается строка с новым `EmployeeId`, именем, зарплатой и отделом. При повторном вводе того же имени программа сообщает, что сотрудник уже существует. При несуществующем отделе сообщает об ошибке внешнего ключа.
 
-Проверено на SQL Server 2022: приложение добавило сотрудника «Аудит» с зарплатой 40000.00 в отдел 1 и прочитало запись по выданному ID. При восьми одновременных попытках добавить одно имя появилась одна запись, остальные семь попыток вернули сообщение о повторе.
+Это ожидаемое поведение кода; фактическую вставку нужно проверить при подключении к SQL Server.
 
 ### Вывод
 
@@ -1612,8 +1612,8 @@ SELECT
     AVG(e.Salary) AS AvgSalary
 FROM Departments d
 LEFT JOIN Employees e ON d.DepartmentId = e.DepartmentId
-GROUP BY d.DepartmentId, d.DepartmentName
-ORDER BY d.DepartmentName, d.DepartmentId;
+GROUP BY d.DepartmentName
+ORDER BY d.DepartmentName;
 ```
 
 ### C#

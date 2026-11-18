@@ -119,15 +119,24 @@ internal class Program
             using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
 
+            // В учебной базе имя не уникально, поэтому проверяем повтор сами.
+            using (var check = new SqlCommand(
+                "SELECT COUNT(*) FROM Employees WHERE EmployeeName = @name", connection))
+            {
+                check.Parameters.Add("@name", SqlDbType.NVarChar, 100).Value = name;
+                int count = Convert.ToInt32(await check.ExecuteScalarAsync());
+                if (count > 0)
+                {
+                    Console.WriteLine("Сотрудник с таким именем уже есть.");
+                    return;
+                }
+            }
+
             int employeeId;
             using (var insert = new SqlCommand(@"
                 INSERT INTO Employees (EmployeeName, Salary, HireDate, DepartmentId)
                 OUTPUT INSERTED.EmployeeId
-                SELECT @name, @salary, CAST(GETDATE() AS DATE), @deptId
-                WHERE NOT EXISTS (
-                    SELECT 1 FROM Employees WITH (UPDLOCK, HOLDLOCK)
-                    WHERE EmployeeName = @name
-                )", connection))
+                VALUES (@name, @salary, CAST(GETDATE() AS DATE), @deptId)", connection))
             {
                 insert.Parameters.Add("@name", SqlDbType.NVarChar, 100).Value = name;
                 var salaryParam = insert.Parameters.Add("@salary", SqlDbType.Decimal);
@@ -136,13 +145,7 @@ internal class Program
                 salaryParam.Value = salary;
                 insert.Parameters.Add("@deptId", SqlDbType.Int).Value = departmentId;
 
-                object? inserted = await insert.ExecuteScalarAsync();
-                if (inserted == null)
-                {
-                    Console.WriteLine("Сотрудник с таким именем уже есть.");
-                    return;
-                }
-                employeeId = Convert.ToInt32(inserted);
+                employeeId = Convert.ToInt32(await insert.ExecuteScalarAsync());
             }
 
             using var verify = new SqlCommand(@"
@@ -192,8 +195,8 @@ internal class Program
                        AVG(e.Salary) AS AvgSalary
                 FROM Departments d
                 LEFT JOIN Employees e ON d.DepartmentId = e.DepartmentId
-                GROUP BY d.DepartmentId, d.DepartmentName
-                ORDER BY d.DepartmentName, d.DepartmentId", connection);
+                GROUP BY d.DepartmentName
+                ORDER BY d.DepartmentName", connection);
             using var reader = await command.ExecuteReaderAsync();
 
             Console.WriteLine(string.Format("{0,-20} | {1,12} | {2,16}",

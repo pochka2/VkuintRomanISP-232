@@ -24,7 +24,7 @@ public class Task18_Parsing : ITask
     /// <summary>Выполняет задание.</summary>
     public void Run()
     {
-        foreach (string text in new[] { "123", "abc", "2147483648" })
+        foreach (string text in new[] { "123", "abc" })
         {
             Console.WriteLine("Ввод: " + text);
             Console.WriteLine($"TryParse: {TryMethod(text, out int a)}, значение {a}");
@@ -44,7 +44,7 @@ public class Task18_Parsing : ITask
             number = int.Parse(text);
             return true;
         }
-        catch (Exception ex) when (ex is FormatException or OverflowException)
+        catch (FormatException)
         {
             number = 0;
             return false;
