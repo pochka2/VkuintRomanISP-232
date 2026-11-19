@@ -1,0 +1,122 @@
+<Window x:Class="ExpenseTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Учёт личных расходов"
+        Height="600" Width="850"
+        Background="#EAF2FF"
+        WindowStartupLocation="CenterScreen">
+
+    <!-- Здесь находятся все элементы окна -->
+    <Grid>
+        <!-- Располагаем элементы друг под другом -->
+        <StackPanel Margin="20">
+
+            <!-- Название программы -->
+            <TextBlock Text="Учёт личных расходов"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="#1E3A5F"
+                       Margin="0,0,0,20"/>
+
+            <!-- Поле для ввода суммы -->
+            <TextBlock Text="Сумма расхода:"
+                       Foreground="#1E3A5F"/>
+
+            <TextBox x:Name="AmountTextBox"
+                     Background="White"
+                     Height="28"
+                     Margin="0,5,0,15"/>
+
+            <!-- Выбор категории расхода -->
+            <TextBlock Text="Категория:"
+                       Foreground="#1E3A5F"/>
+
+            <ComboBox x:Name="CategoryComboBox"
+                      SelectedIndex="0"
+                      Background="White"
+                      Height="28"
+                      Margin="0,5,0,15">
+                <ComboBoxItem Content="Продукты"/>
+                <ComboBoxItem Content="Транспорт"/>
+                <ComboBoxItem Content="Развлечения"/>
+                <ComboBoxItem Content="Другое"/>
+            </ComboBox>
+
+            <!-- Выбор даты расхода -->
+            <TextBlock Text="Дата:"
+                       Foreground="#1E3A5F"/>
+
+            <DatePicker x:Name="ExpenseDatePicker"
+                        Background="White"
+                        Height="28"
+                        Margin="0,5,0,15"/>
+
+            <!-- Кнопки добавления и удаления -->
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,0,0,20">
+
+                <!-- Click вызывает метод добавления из C# -->
+                <Button Content="Добавить расход"
+                        Background="#2563EB"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Width="150"
+                        Height="35"
+                        Margin="0,0,10,0"
+                        Click="AddButton_Click"/>
+
+                <!-- Click вызывает метод удаления из C# -->
+                <Button Content="Удалить расход"
+                        Background="#DC5060"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Width="150"
+                        Height="35"
+                        Click="DeleteButton_Click"/>
+
+            </StackPanel>
+
+            <!-- Таблица со всеми расходами -->
+            <TextBlock Text="Список расходов"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Foreground="#1E3A5F"
+                       Margin="0,0,0,10"/>
+
+            <DataGrid x:Name="ExpensesDataGrid"
+                      Height="170"
+                      Background="White"
+                      RowBackground="White"
+                      AlternatingRowBackground="#EDF4FF"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      IsReadOnly="True">
+
+                <!-- Binding показывает данные из C# -->
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Дата"
+                                        Binding="{Binding Date, StringFormat=dd.MM.yyyy}"
+                                        Width="*"/>
+
+                    <DataGridTextColumn Header="Категория"
+                                        Binding="{Binding Category}"
+                                        Width="*"/>
+
+                    <DataGridTextColumn Header="Сумма"
+                                        Binding="{Binding Amount}"
+                                        Width="*"/>
+                </DataGrid.Columns>
+
+            </DataGrid>
+
+            <!-- Здесь показываем сумму всех расходов -->
+            <TextBlock x:Name="TotalTextBlock"
+                       Text="Всего расходов: 0 руб."
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Foreground="#1E3A5F"
+                       Margin="0,15,0,0"/>
+
+        </StackPanel>
+    </Grid>
+</Window>
